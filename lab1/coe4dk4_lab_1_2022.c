@@ -28,6 +28,13 @@
 
 /*******************************************************************************/
 
+struct Simulation_Result {
+  double utilization,
+  double fraction_served,
+  double mean_number_in_system,
+  double mean_delay,
+}
+
 /*
  * Simulation Parameters
  */
@@ -39,6 +46,131 @@
 #define ARRIVAL_RATE 0.1
 
 #define BLIP_RATE 10000
+
+struct Step_Configuration {
+  char* step_name;
+
+  double* numbers_to_serve;
+  int numbers_to_serve_size;
+
+  int* service_times;
+  int service_times_size;
+
+  double* arrival_rates;
+  int arrival_rates_size;
+
+  int* random_seeds;
+  // int random_seeds_size;
+
+  int md1_or_mm1; // 0: M/D/1, 1: M/M/1
+
+  // TODO: Add additional parameters to handle steps 7 and 8
+};
+
+double step2_numbers_to_serve[] = {NUMBER_TO_SERVE};
+int step2_service_times[] = {10};
+double step2_arrival_rates[] = {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09};
+int step2_random_seeds[] = {400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394}; 
+
+double step3_numbers_to_serve[] = {10e3, 20e3, 30e3, 40e3, 50e3, 60e3};
+int step3_service_times[] = {10};
+double step3_arrival_rates[] = {1.1};
+int step3_random_seeds[] = {400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394}; 
+
+double step4_numbers_to_serve[] = {NUMBER_TO_SERVE};
+int step4_service_times[] = {30};
+double step4_arrival_rates[] = {0.01, 0.04, 0.07, 0.11, 0.14, 0.17, 0.20, 0.23, 0.26, 0.29};
+int step4_random_seeds[] = {400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394}; 
+
+struct Step_Configuration steps[] = {
+  {
+    "Step 2",
+    step2_numbers_to_serve,
+    1,
+    step2_service_times,
+    1,
+    step2_arrival_rates,
+    9,
+    step2_random_seeds,
+    0,
+  },
+  {
+    "Step 3",
+    step3_numbers_to_serve,
+    6,
+    step3_service_times,
+    1,
+    step3_arrival_rates,
+    1,
+    step3_random_seeds,
+    0,
+  },
+  {
+    "Step 4",
+    step4_numbers_to_serve,
+    1,
+    step4_service_times,
+    1,
+    step4_arrival_rates,
+    10,
+    step4_random_seeds,
+    0,
+  },
+  {
+    "Step 5",
+    step2_numbers_to_serve,
+    1,
+    step2_service_times,
+    1,
+    step2_arrival_rates,
+    9,
+    step2_random_seeds,
+    1,
+  }
+};
+
+int run(struct Step_Configuration *steps, int steps_size);
+int run_step(struct Step_Configuration step);
+struct Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1);
+int flush_results(struct Simulation_Result *sim_rslts, int sim_rslts_size);
+
+int run(struct Step_Configuration *steps, int steps_size){
+  for(int step_index = 0; step_index < steps_size; step_index++){
+    run_step(steps[step_index]);
+  }
+
+  return 0;
+}
+
+int run_step(struct Step_Configuration step){
+  int sim_rslts_size = step.numbers_to_serve_size * step.service_times_size * step.arrival_rates_size;
+  struct Simulation_Result* sim_rslts = calloc(
+    sim_rslts_size,
+    sizeof(struct Simulation_Result)
+  );
+  double acc_mean_delay;
+
+
+  for(int i = 0; i < step.numbers_to_serve_size; i++){
+    for(int j = 0; j < step.service_times_size; j++){
+      for(int k = 0; k < step.arrival_rates_size; k++){
+        sim_rslts[(i+1)*(j+1)*(j+1)] = run_simulation(
+          step.numbers_to_serve[i],
+          step.service_times[j],
+          step.arrival_rates[k],
+          step.random_seeds,
+          step.md1_or_mm1
+        );
+
+      }
+    }
+  }
+
+  flush_results(sim_rslts, sim_rslts_size);
+
+  return 0;
+}
+
 
 /*******************************************************************************/
 
