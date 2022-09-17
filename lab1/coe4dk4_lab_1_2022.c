@@ -28,12 +28,12 @@
 
 /*******************************************************************************/
 
-struct Simulation_Result {
-  double utilization,
-  double fraction_served,
-  double mean_number_in_system,
-  double mean_delay,
-}
+typedef struct {
+  double utilization;
+  double fraction_served;
+  double mean_number_in_system;
+  double mean_delay;
+} Simulation_Result;
 
 /*
  * Simulation Parameters
@@ -47,7 +47,7 @@ struct Simulation_Result {
 
 #define BLIP_RATE 10000
 
-struct Step_Configuration {
+typedef struct {
   char* step_name;
 
   double* numbers_to_serve;
@@ -65,7 +65,7 @@ struct Step_Configuration {
   int md1_or_mm1; // 0: M/D/1, 1: M/M/1
 
   // TODO: Add additional parameters to handle steps 7 and 8
-};
+} Step_Configuration;
 
 double step2_numbers_to_serve[] = {NUMBER_TO_SERVE};
 int step2_service_times[] = {10};
@@ -82,7 +82,7 @@ int step4_service_times[] = {30};
 double step4_arrival_rates[] = {0.01, 0.04, 0.07, 0.11, 0.14, 0.17, 0.20, 0.23, 0.26, 0.29};
 int step4_random_seeds[] = {400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394, 400137394}; 
 
-struct Step_Configuration steps[] = {
+Step_Configuration steps[] = {
   {
     "Step 2",
     step2_numbers_to_serve,
@@ -129,12 +129,12 @@ struct Step_Configuration steps[] = {
   }
 };
 
-int run(struct Step_Configuration *steps, int steps_size);
-int run_step(struct Step_Configuration step);
-struct Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1);
-int flush_results(struct Simulation_Result *sim_rslts, int sim_rslts_size);
+int run(Step_Configuration *steps, int steps_size);
+int run_step(Step_Configuration step);
+Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1);
+int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size);
 
-int run(struct Step_Configuration *steps, int steps_size){
+int run(Step_Configuration *steps, int steps_size){
   for(int step_index = 0; step_index < steps_size; step_index++){
     run_step(steps[step_index]);
   }
@@ -142,11 +142,11 @@ int run(struct Step_Configuration *steps, int steps_size){
   return 0;
 }
 
-int run_step(struct Step_Configuration step){
+int run_step(Step_Configuration step){
   int sim_rslts_size = step.numbers_to_serve_size * step.service_times_size * step.arrival_rates_size;
-  struct Simulation_Result* sim_rslts = calloc(
+  Simulation_Result* sim_rslts = calloc(
     sim_rslts_size,
-    sizeof(struct Simulation_Result)
+    sizeof(Simulation_Result)
   );
   double acc_mean_delay;
 
@@ -171,7 +171,109 @@ int run_step(struct Step_Configuration step){
   return 0;
 }
 
+Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1){
+  
+  double acc_utilization = 0;
+  double acc_fraction_served = 0;
+  double acc_mean_number_in_system = 0;
+  double acc_mean_delay = 0;
 
+  
+  for(int run = 0; run < 10; run++){
+    double clock = 0; /* Clock keeps track of simulation time. */
+
+    /* System state variables. */
+    int number_in_system = 0;
+    double next_arrival_time = 0;
+    double next_departure_time = 0;
+
+    /* Data collection variables. */
+    long int total_served = 0;
+    long int total_arrived = 0;
+
+    double total_busy_time = 0;
+    double integral_of_n = 0;
+    double last_event_time = 0;
+
+    /* Set the seed of the random number generator. */
+    random_generator_initialize(RANDOM_SEED);
+
+    /* Process customers until we are finished. */
+    while (total_served < NUMBER_TO_SERVE) {
+
+        /* Test if the next event is a customer arrival or departure. */
+      if(number_in_system == 0 || next_arrival_time < next_departure_time) {
+
+        /*
+          * A new arrival is occurring.
+          */
+
+        clock = next_arrival_time;
+        next_arrival_time = clock + exponential_generator((double) 1/ARRIVAL_RATE);
+
+        /* Update our statistics. */
+        integral_of_n += number_in_system * (clock - last_event_time);
+        last_event_time = clock;
+
+        number_in_system++;
+        total_arrived++;
+
+        /* If this customer has arrived to an empty system, start its
+      service right away. */
+        if(number_in_system == 1) next_departure_time = clock + SERVICE_TIME;
+
+      } else {
+
+        /*
+          * A customer departure is occuring. 
+          */
+
+        clock = next_departure_time;
+
+        /* Update our statistics. */
+        integral_of_n += number_in_system * (clock - last_event_time);
+        last_event_time = clock;
+
+        number_in_system--;
+        total_served++;
+        total_busy_time += SERVICE_TIME;
+
+        /* 
+          * If there are other customers waiting, start one in service
+          * right away.
+          */
+
+        if(number_in_system > 0) next_departure_time = clock + SERVICE_TIME;
+
+        /* 
+          * Every so often, print an activity message to show we are active. 
+          */
+
+        if (total_served % BLIP_RATE == 0)
+          printf("Customers served = %ld (Total arrived = %ld)\r",
+            total_served, total_arrived);
+      }
+
+    }
+
+    acc_utilization += total_busy_time/clock;
+    acc_fraction_served += (double) total_served/total_arrived;
+    acc_mean_number_in_system += integral_of_n/clock;
+    acc_mean_delay += integral_of_n/total_served;
+
+  }
+
+  return (Simulation_Result){
+    acc_utilization/10,
+    acc_fraction_served/10,
+    acc_mean_number_in_system/10,
+    acc_mean_delay/10
+  };
+}
+
+int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size){
+  return 0;
+}
 /*******************************************************************************/
 
 /*
@@ -185,87 +287,12 @@ int run_step(struct Step_Configuration step){
 
 int main()
 {
-  double clock = 0; /* Clock keeps track of simulation time. */
-
-  /* System state variables. */
-  int number_in_system = 0;
-  double next_arrival_time = 0;
-  double next_departure_time = 0;
-
-  /* Data collection variables. */
-  long int total_served = 0;
-  long int total_arrived = 0;
-
-  double total_busy_time = 0;
-  double integral_of_n = 0;
-  double last_event_time = 0;
-
-  /* Set the seed of the random number generator. */
-  random_generator_initialize(RANDOM_SEED);
-
-  /* Process customers until we are finished. */
-  while (total_served < NUMBER_TO_SERVE) {
-
-    /* Test if the next event is a customer arrival or departure. */
-   if(number_in_system == 0 || next_arrival_time < next_departure_time) {
-
-     /*
-      * A new arrival is occurring.
-      */
-
-     clock = next_arrival_time;
-     next_arrival_time = clock + exponential_generator((double) 1/ARRIVAL_RATE);
-
-     /* Update our statistics. */
-     integral_of_n += number_in_system * (clock - last_event_time);
-     last_event_time = clock;
-
-     number_in_system++;
-     total_arrived++;
-
-     /* If this customer has arrived to an empty system, start its
-	service right away. */
-     if(number_in_system == 1) next_departure_time = clock + SERVICE_TIME;
-
-   } else {
-
-     /*
-      * A customer departure is occuring. 
-      */
-
-     clock = next_departure_time;
-
-     /* Update our statistics. */
-     integral_of_n += number_in_system * (clock - last_event_time);
-     last_event_time = clock;
-
-     number_in_system--;
-     total_served++;
-     total_busy_time += SERVICE_TIME;
-
-     /* 
-      * If there are other customers waiting, start one in service
-      * right away.
-      */
-
-     if(number_in_system > 0) next_departure_time = clock + SERVICE_TIME;
-
-     /* 
-      * Every so often, print an activity message to show we are active. 
-      */
-
-     if (total_served % BLIP_RATE == 0)
-       printf("Customers served = %ld (Total arrived = %ld)\r",
-	      total_served, total_arrived);
-   }
-
-  }
-
-  /* Output final results. */
-  printf("\nUtilization = %f\n", total_busy_time/clock);
-  printf("Fraction served = %f\n", (double) total_served/total_arrived);
-  printf("Mean number in system = %f\n", integral_of_n/clock);
-  printf("Mean delay = %f\n", integral_of_n/total_served);
+  run(steps, 4);
+  // /* Output final results. */
+  // printf("\nUtilization = %f\n", total_busy_time/clock);
+  // printf("Fraction served = %f\n", (double) total_served/total_arrived);
+  // printf("Mean number in system = %f\n", integral_of_n/clock);
+  // printf("Mean delay = %f\n", integral_of_n/total_served);
 
   /* Halt the program before exiting. */
   printf("Hit Enter to finish ... \n");
