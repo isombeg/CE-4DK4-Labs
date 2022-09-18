@@ -279,11 +279,14 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
 
 int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size){
   // export file here
-  printf("REACHED FLUSH RESULTS!\n");
-  printf("utilization = %f\n", sim_rslts->utilization);
-  printf("fraction_served = %f\n", sim_rslts->fraction_served);
-  printf("mean_number_in_system = %f\n", sim_rslts->mean_number_in_system);
-  printf("mean_delay = %f\n", sim_rslts->mean_delay);
+  printf("\nRESULTS!\n");
+  for (int i=0; i<sim_rslts_size; i++) {
+    printf("utilization = %f\n", sim_rslts[i].utilization);
+    printf("fraction_served = %f\n", sim_rslts[i].fraction_served);
+    printf("mean_number_in_system = %f\n", sim_rslts[i].mean_number_in_system);
+    printf("mean_delay = %f\n", sim_rslts[i].mean_delay);
+  }
+
   
   return 0;
 }
