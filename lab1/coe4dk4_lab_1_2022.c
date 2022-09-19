@@ -151,13 +151,12 @@ int run_step(Step_Configuration step){
     sim_rslts_size,
     sizeof(Simulation_Result)
   );
-  double acc_mean_delay;
 
 
-  for(int i = 0; i < step.numbers_to_serve_size; i++){
+  for(int i = 0, sim_run = 0; i < step.numbers_to_serve_size; i++){
     for(int j = 0; j < step.service_times_size; j++){
-      for(int k = 0; k < step.arrival_rates_size; k++){
-        sim_rslts[(i+1)*(j+1)*(j+1)] = run_simulation(
+      for(int k = 0; k < step.arrival_rates_size; k++, sim_run++){
+        sim_rslts[i*step.service_times_size + j*step.arrival_rates_size +k] = run_simulation(
           step.numbers_to_serve[i],
           step.service_times[j],
           step.arrival_rates[k],
@@ -265,7 +264,16 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
     acc_mean_number_in_system += integral_of_n/clock;
     acc_mean_delay += integral_of_n/total_served;
 
+    printf("RESULTS AFTER RUN #%d - utilization = %f, fraction_served = %f, mean_number_in_system = %f, mean_delay = %f\n",
+      run, total_busy_time/clock, (double) total_served/total_arrived, integral_of_n/clock, integral_of_n/total_served);
+
   }
+
+  printf("ACCUMULATED RESULTS - utilization = %f, fraction_served = %f, mean_number_in_system = %f, mean_delay = %f\n",
+    acc_utilization, acc_fraction_served, acc_mean_number_in_system, acc_mean_delay);
+
+  printf("AVERAGED RESULTS - utilization = %f, fraction_served = %f, mean_number_in_system = %f, mean_delay = %f\n",
+    acc_utilization/10, acc_fraction_served/10, acc_mean_number_in_system/10, acc_mean_delay/10);
 
   printf("\n");
 
