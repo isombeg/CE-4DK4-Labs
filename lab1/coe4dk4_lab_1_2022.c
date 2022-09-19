@@ -30,7 +30,7 @@
 
 typedef struct {
   double arrival_rate;
-  double service_time;
+  int service_time;
   double number_to_serve;
 
   double utilization;
@@ -136,11 +136,13 @@ Step_Configuration steps[] = {
 int run(Step_Configuration *steps, int steps_size);
 int run_step(Step_Configuration step, FILE *fpt);
 Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1);
-int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *ptr);
+int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *fpt);
 
 int run(Step_Configuration *steps, int steps_size){
  //printf("MADE IT TO RUN!\n");
-  FILE *fpt = fopen("simulation_results.csv", "w")
+  FILE *fpt = fopen("simulation_results.csv", "w");
+  fprintf(fpt, "Arrival Rate, Service Time, Number to Serve, Utilization, Fraction Served, Mean Number in System, Mean Delay\n");
+
   for(int step_index = 0; step_index < steps_size; step_index++){
     printf("\nSimulating Step %d\n", step_index+2);
     run_step(steps[step_index], fpt);
@@ -175,7 +177,7 @@ int run_step(Step_Configuration step, FILE *fpt){
     }
   }
 
-  flush_results(step.step_name, sim_rslts, sim_rslts_size, ptr);
+  flush_results(step.step_name, sim_rslts, sim_rslts_size, fpt);
 
   return 0;
 }
@@ -296,16 +298,25 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
   };
 }
 
-int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *ptr){
+int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *fpt){
   // export file here
-  
+  fprintf(fpt, "\n%s\n", step_name);
 
   printf("\nRESULTS!\n");
   for (int i=0; i<sim_rslts_size; i++) {
-    printf("utilization = %f\n", sim_rslts[i].utilization);
-    printf("fraction_served = %f\n", sim_rslts[i].fraction_served);
-    printf("mean_number_in_system = %f\n", sim_rslts[i].mean_number_in_system);
-    printf("mean_delay = %f\n", sim_rslts[i].mean_delay);
+    fprintf(fpt, "%f, %d, %f, %f, %f, %f, %f\n",
+      sim_rslts[i].arrival_rate,
+      sim_rslts[i].service_time,
+      sim_rslts[i].number_to_serve,
+      sim_rslts[i].utilization,
+      sim_rslts[i].fraction_served,
+      sim_rslts[i].mean_number_in_system,
+      sim_rslts[i].mean_delay);
+
+    // printf("utilization = %f\n", sim_rslts[i].utilization);
+    // printf("fraction_served = %f\n", sim_rslts[i].fraction_served);
+    // printf("mean_number_in_system = %f\n", sim_rslts[i].mean_number_in_system);
+    // printf("mean_delay = %f\n", sim_rslts[i].mean_delay);
   }
 
   
@@ -324,7 +335,7 @@ int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_s
 
 int main()
 {
-  run(steps, 2);
+  run(steps, 3);
   //printf("Steps name = %s", steps[0].step_name);
   // /* Output final results. */
   // printf("\nUtilization = %f\n", total_busy_time/clock);
