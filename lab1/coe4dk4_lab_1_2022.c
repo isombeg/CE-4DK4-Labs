@@ -212,7 +212,7 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
           */
 
         clock = next_arrival_time;
-        next_arrival_time = clock + exponential_generator((double) 1/arrival_rate);
+        next_arrival_time = clock + exponential_generator((step.md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate);
 
         /* Update our statistics. */
         integral_of_n += number_in_system * (clock - last_event_time);
