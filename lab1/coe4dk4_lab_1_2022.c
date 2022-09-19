@@ -47,6 +47,7 @@ typedef struct {
 
 #define BLIP_RATE 10000
 
+
 typedef struct {
   char* step_name;
 
@@ -81,6 +82,8 @@ double step4_numbers_to_serve[] = {NUMBER_TO_SERVE};
 int step4_service_times[] = {30};
 double step4_arrival_rates[] = {0.01, 0.04, 0.07, 0.11, 0.14, 0.17, 0.20, 0.23, 0.26, 0.29};
 int step4_random_seeds[] = {RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, 400137394, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED}; 
+
+double step8_arrival_rates[] = {1/0.01, 1/0.02, 1/0.03, 1/0.04, 1/0.05, 1/0.06, 1/0.07, 1/0.08, 1/0.09};
 
 Step_Configuration steps[] = {
   {
@@ -117,7 +120,7 @@ Step_Configuration steps[] = {
     0,
   },
   {
-    "Step 5",
+    "Step 6",
     step2_numbers_to_serve,
     1,
     step2_service_times,
@@ -126,6 +129,17 @@ Step_Configuration steps[] = {
     9,
     step2_random_seeds,
     1,
+  },
+  {
+    "Step 8",
+    step2_numbers_to_serve,
+    1,
+    step2_service_times,
+    1,
+    step8_arrival_rates,
+    9,
+    step2_random_seeds,
+    0,
   }
 };
 
