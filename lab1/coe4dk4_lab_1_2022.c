@@ -29,6 +29,10 @@
 /*******************************************************************************/
 
 typedef struct {
+  double arrival_rate;
+  double service_time;
+  double number_to_serve;
+
   double utilization;
   double fraction_served;
   double mean_number_in_system;
@@ -130,21 +134,24 @@ Step_Configuration steps[] = {
 };
 
 int run(Step_Configuration *steps, int steps_size);
-int run_step(Step_Configuration step);
+int run_step(Step_Configuration step, FILE *fpt);
 Simulation_Result run_simulation(double number_to_serve, int service_time, double arrival_rate, int* random_seeds, int md1_or_mm1);
-int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size);
+int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *ptr);
 
 int run(Step_Configuration *steps, int steps_size){
  //printf("MADE IT TO RUN!\n");
+  FILE *fpt = fopen("simulation_results.csv", "w")
   for(int step_index = 0; step_index < steps_size; step_index++){
     printf("\nSimulating Step %d\n", step_index+2);
-    run_step(steps[step_index]);
+    run_step(steps[step_index], fpt);
   }
+
+  fclose(fpt);
 
   return 0;
 }
 
-int run_step(Step_Configuration step){
+int run_step(Step_Configuration step, FILE *fpt){
   //printf("MADE IT TO RUN_STEP!\n");
   int sim_rslts_size = step.numbers_to_serve_size * step.service_times_size * step.arrival_rates_size;
   Simulation_Result* sim_rslts = calloc(
@@ -168,7 +175,7 @@ int run_step(Step_Configuration step){
     }
   }
 
-  flush_results(sim_rslts, sim_rslts_size);
+  flush_results(step.step_name, sim_rslts, sim_rslts_size, ptr);
 
   return 0;
 }
@@ -278,6 +285,10 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
   printf("\n");
 
   return (Simulation_Result){
+    arrival_rate,
+    service_time,
+    number_to_serve,
+
     acc_utilization/10,
     acc_fraction_served/10,
     acc_mean_number_in_system/10,
@@ -285,8 +296,10 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
   };
 }
 
-int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size){
+int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_size, FILE *ptr){
   // export file here
+  
+
   printf("\nRESULTS!\n");
   for (int i=0; i<sim_rslts_size; i++) {
     printf("utilization = %f\n", sim_rslts[i].utilization);
@@ -311,7 +324,7 @@ int flush_results(Simulation_Result *sim_rslts, int sim_rslts_size){
 
 int main()
 {
-  run(steps, 1);
+  run(steps, 2);
   //printf("Steps name = %s", steps[0].step_name);
   // /* Output final results. */
   // printf("\nUtilization = %f\n", total_busy_time/clock);
