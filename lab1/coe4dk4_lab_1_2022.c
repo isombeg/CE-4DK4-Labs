@@ -47,6 +47,7 @@ typedef struct {
 
 #define BLIP_RATE 10000
 
+#define MAX_QUEUE_SIZE 20e6 //20 million queue for now we can change this 
 
 typedef struct {
   char* step_name;
@@ -121,6 +122,17 @@ Step_Configuration steps[] = {
   },
   {
     "Step 6",
+    step2_numbers_to_serve,
+    1,
+    step2_service_times,
+    1,
+    step2_arrival_rates,
+    9,
+    step2_random_seeds,
+    1,
+  },
+  {
+    "Step 7",
     step2_numbers_to_serve,
     1,
     step2_service_times,
@@ -226,7 +238,7 @@ Simulation_Result run_simulation(double number_to_serve, int service_time, doubl
           */
 
         clock = next_arrival_time;
-        next_arrival_time = clock + exponential_generator((step.md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate);
+        next_arrival_time = clock + exponential_generator((step.md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate); //Step 8
 
         /* Update our statistics. */
         integral_of_n += number_in_system * (clock - last_event_time);
