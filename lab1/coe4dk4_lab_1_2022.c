@@ -28,6 +28,10 @@
 
 /*******************************************************************************/
 
+#define STUDENT_NUMBER_GJ 400137394
+#define STUDENT_NUMBER_CARLOS 400184894
+#define STUDENT_NUMBER_RAFI 400182022
+
 typedef struct {
   double arrival_rate;
   int service_time;
@@ -45,7 +49,17 @@ typedef struct {
  * Simulation Parameters
  */
 
-#define RANDOM_SEED 5259140
+#define RANDOM_SEED_0 5259140
+#define RANDOM_SEED_1 3955051
+#define RANDOM_SEED_2 8517605
+#define RANDOM_SEED_3 4721416
+#define RANDOM_SEED_4 2965788
+#define RANDOM_SEED_5 3896382
+#define RANDOM_SEED_6 7297461
+#define RANDOM_SEED_7 1714639
+#define RANDOM_SEED_8 9685552
+#define RANDOM_SEED_9 1007278
+
 #define NUMBER_TO_SERVE 50e6
 
 #define SERVICE_TIME 10
@@ -85,17 +99,15 @@ double MAX_QUEUE_SIZES_DEFAULT[] = {MAX_QUEUE_SIZE};
 double step2_numbers_to_serve[] = {NUMBER_TO_SERVE};
 int step2_service_times[] = {10};
 double step2_arrival_rates[] = {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09};
-int step2_random_seeds[] = {RANDOM_SEED, 400137394, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED};
+int random_seeds[] = {STUDENT_NUMBER_GJ, STUDENT_NUMBER_CARLOS, STUDENT_NUMBER_RAFI, RANDOM_SEED_0, RANDOM_SEED_1, RANDOM_SEED_2, RANDOM_SEED_3, RANDOM_SEED_4, RANDOM_SEED_5, RANDOM_SEED_6};
 
 double step3_numbers_to_serve[] = {10e3, 20e3, 30e3, 40e3, 50e3, 60e3};
 int step3_service_times[] = {10};
 double step3_arrival_rates[] = {1.1};
-int step3_random_seeds[] = {RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, 400137394, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED}; 
 
 double step4_numbers_to_serve[] = {NUMBER_TO_SERVE};
 int step4_service_times[] = {30};
 double step4_arrival_rates[] = {0.01, 0.04, 0.07, 0.11, 0.14, 0.17, 0.20, 0.23, 0.26, 0.29};
-int step4_random_seeds[] = {RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED, 400137394, RANDOM_SEED, RANDOM_SEED, RANDOM_SEED}; 
 
 double step7_arrival_rates[] = {0.01};
 double step7_max_queue_sizes[] = {3, 6, 12, 25, 50, 10e1};
@@ -115,7 +127,7 @@ Step_Configuration steps[] = {
     0,
     MAX_QUEUE_SIZES_DEFAULT,
     MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    step2_random_seeds,
+    random_seeds,
     0,
   },
   {
@@ -129,7 +141,7 @@ Step_Configuration steps[] = {
     0,
     MAX_QUEUE_SIZES_DEFAULT,
     MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    step3_random_seeds,
+    random_seeds,
     0,
   },
   {
@@ -143,7 +155,7 @@ Step_Configuration steps[] = {
     0,
     MAX_QUEUE_SIZES_DEFAULT,
     MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    step4_random_seeds,
+    random_seeds,
     0,
   },
   {
@@ -157,7 +169,7 @@ Step_Configuration steps[] = {
     0,
     MAX_QUEUE_SIZES_DEFAULT,
     MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    step2_random_seeds,
+    random_seeds,
     1,
   },
   {
@@ -171,7 +183,7 @@ Step_Configuration steps[] = {
     1,
     step7_max_queue_sizes,
     step7_max_queue_sizes_size,
-    step2_random_seeds,
+    random_seeds,
     1,
   },
   {
@@ -185,7 +197,7 @@ Step_Configuration steps[] = {
     0,
     MAX_QUEUE_SIZES_DEFAULT,
     MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    step2_random_seeds,
+    random_seeds,
     0,
   }
 };
@@ -266,7 +278,7 @@ Simulation_Result run_simulation(
   double acc_mean_delay = 0;
   double acc_rejection_probability = 0;
 
-  printf("ARRIVAL_RATE = %f\tSERVICE_TIME = %d\tMAX_QUEUE_SIZE =%d\n", arrival_rate, service_time, max_queue_size);
+  printf("ARRIVAL_RATE = %f\tSERVICE_TIME = %d\tMAX_QUEUE_SIZE =%f\n", arrival_rate, service_time, max_queue_size);
   //printf("SERVICE_TIME = %d\n", service_time);
   
   for(int run = 0; run < 10; run++){
@@ -422,7 +434,7 @@ int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_s
 
 int main()
 {
-  run(steps, 6);
+  run(steps, 2);
   //printf("Steps name = %s", steps[0].step_name);
   // /* Output final results. */
   // printf("\nUtilization = %f\n", total_busy_time/clock);
