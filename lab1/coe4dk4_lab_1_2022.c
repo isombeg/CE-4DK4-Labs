@@ -103,75 +103,89 @@ int random_seeds[] = {STUDENT_NUMBER_GJ, STUDENT_NUMBER_CARLOS, STUDENT_NUMBER_R
 
 double step3_numbers_to_serve[] = {10e3, 20e3, 30e3, 40e3, 50e3, 60e3};
 int step3_service_times[] = {10};
-double step3_arrival_rates[] = {1.1};
+double step3_arrival_rates[] = {0.2};
 
 double step4_numbers_to_serve[] = {NUMBER_TO_SERVE};
 int step4_service_times[] = {30};
-double step4_arrival_rates[] = {0.01, 0.04, 0.07, 0.11, 0.14, 0.17, 0.20, 0.23, 0.26, 0.29};
+double step4_arrival_rates[] = {0.001, 0.004, 0.007, 0.011, 0.014, 0.017, 0.020, 0.023, 0.026, 0.029};
 
-double step7_arrival_rates[] = {0.01};
+double step7_arrival_rates[] = {0.01, 0.09, 0.11, 0.13, 0.15, 0.17, 0.32, 0.57, 0.79};
 double step7_max_queue_sizes[] = {3, 6, 12, 25, 50, 10e1};
 const int step7_max_queue_sizes_size = 6;
 
-double step8_arrival_rates[] = {1/0.01, 1/0.02, 1/0.03, 1/0.04, 1/0.05, 1/0.06, 1/0.07, 1/0.08, 1/0.09};
+//double step8_arrival_rates[] = {1/0.01, 1/0.02, 1/0.03, 1/0.04, 1/0.05, 1/0.06, 1/0.07, 1/0.08, 1/0.09};
 
 Step_Configuration steps[] = {
-  {
-    "Step 2",
-    step2_numbers_to_serve,
-    1,
-    step2_service_times,
-    1,
-    step2_arrival_rates,
-    9,
-    0,
-    MAX_QUEUE_SIZES_DEFAULT,
-    MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    random_seeds,
-    0,
-  },
-  {
-    "Step 3",
-    step3_numbers_to_serve,
-    6,
-    step3_service_times,
-    1,
-    step3_arrival_rates,
-    1,
-    0,
-    MAX_QUEUE_SIZES_DEFAULT,
-    MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    random_seeds,
-    0,
-  },
-  {
-    "Step 4",
-    step4_numbers_to_serve,
-    1,
-    step4_service_times,
-    1,
-    step4_arrival_rates,
-    10,
-    0,
-    MAX_QUEUE_SIZES_DEFAULT,
-    MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    random_seeds,
-    0,
-  },
-  {
-    "Step 6",
-    step2_numbers_to_serve,
-    1,
-    step2_service_times,
-    1,
-    step2_arrival_rates,
-    9,
-    0,
-    MAX_QUEUE_SIZES_DEFAULT,
-    MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    random_seeds,
-    1,
-  },
+  // {
+  //   "Step 2",
+  //   step2_numbers_to_serve,
+  //   1,
+  //   step2_service_times,
+  //   1,
+  //   step2_arrival_rates,
+  //   9,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // },
+  // {
+  //   "Step 3",
+  //   step3_numbers_to_serve,
+  //   6,
+  //   step3_service_times,
+  //   1,
+  //   step3_arrival_rates,
+  //   1,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // },
+  // {
+  //   "Step 4",
+  //   step4_numbers_to_serve,
+  //   1,
+  //   step4_service_times,
+  //   1,
+  //   step4_arrival_rates,
+  //   10,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // },
+  // {
+  //   "Step 6 M/D/1",
+  //   step2_numbers_to_serve,
+  //   1,
+  //   step4_service_times,
+  //   1,
+  //   step2_arrival_rates,
+  //   9,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // },
+  //   {
+  //   "Step 6 M/M/1",
+  //   step2_numbers_to_serve,
+  //   1,
+  //   step4_service_times,
+  //   1,
+  //   step2_arrival_rates,
+  //   9,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   1,
+  // },
   {
     "Step 7",
     step2_numbers_to_serve,
@@ -179,27 +193,41 @@ Step_Configuration steps[] = {
     step2_service_times,
     1,
     step7_arrival_rates,
-    1,
+    9,
     1,
     step7_max_queue_sizes,
     step7_max_queue_sizes_size,
     random_seeds,
     1,
-  },
-  {
-    "Step 8",
-    step2_numbers_to_serve,
-    1,
-    step2_service_times,
-    1,
-    step8_arrival_rates,
-    9,
-    0,
-    MAX_QUEUE_SIZES_DEFAULT,
-    MAX_QUEUE_SIZES_SIZE_DEFAULT,
-    random_seeds,
-    0,
   }
+  // {
+  //   "Step 8 Part 2",
+  //   step2_numbers_to_serve,
+  //   1,
+  //   step2_service_times,
+  //   1,
+  //   step2_arrival_rates,
+  //   9,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // },
+  // {
+  //   "Step 8 Part 3",
+  //   step3_numbers_to_serve,
+  //   6,
+  //   step3_service_times,
+  //   1,
+  //   step3_arrival_rates,
+  //   1,
+  //   0,
+  //   MAX_QUEUE_SIZES_DEFAULT,
+  //   MAX_QUEUE_SIZES_SIZE_DEFAULT,
+  //   random_seeds,
+  //   0,
+  // }
 };
 
 int run(Step_Configuration *steps, int steps_size);
@@ -311,7 +339,9 @@ Simulation_Result run_simulation(
         */
 
         clock = next_arrival_time;
-        next_arrival_time = clock + exponential_generator((md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate); //Step 8
+        next_arrival_time = clock + exponential_generator((md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate); //Step 6
+        //exponential_generator((md1_or_mm1) ? (double)service_time : (double) 1/arrival_rate); //Step 6
+        //Step 8 change this to clock + 1/arrival_rate
 
         /* Update our statistics. */
         integral_of_n += number_in_system * (clock - last_event_time);
@@ -434,7 +464,7 @@ int flush_results(char* step_name, Simulation_Result *sim_rslts, int sim_rslts_s
 
 int main()
 {
-  run(steps, 2);
+  run(steps, 1);
   //printf("Steps name = %s", steps[0].step_name);
   // /* Output final results. */
   // printf("\nUtilization = %f\n", total_busy_time/clock);
