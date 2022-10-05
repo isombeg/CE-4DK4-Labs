@@ -44,6 +44,7 @@ cleanup_memory (Simulation_Run_Ptr simulation_run)
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   buffer = data->buffer;
   link = data->link;
+  data->packet_delay_exceed_20 = 0;
 
   if(link->state == BUSY) /* Clean out the server. */
     xfree(server_get(link));
@@ -54,6 +55,8 @@ cleanup_memory (Simulation_Run_Ptr simulation_run)
   xfree(buffer);
 
   simulation_run_free_memory(simulation_run); /* Clean up the simulation_run. */
+
+  data->packet_delay_exceed_20 = 0; // Clean up packet_delay_exceed_20
 }
 
 
