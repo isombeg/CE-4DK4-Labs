@@ -37,7 +37,6 @@
  * in packet_transmissionl.c) is executed. A packet object is attached to the
  * event and is recovered in end_packet_transmission.c.
  */
-
 long
 schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
 				       double event_time,
@@ -60,7 +59,6 @@ schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
  * if there are other packets waiting in the fifo queue. If that is the case it
  * starts the transmission of the next packet.
  */
-
 void
 end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
 {
@@ -104,7 +102,6 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
  * function. This is done by placing the packet in the server. The packet
  * transmission end event for this packet is then scheduled.
  */
-
 void
 start_transmission_on_link(Simulation_Run_Ptr simulation_run, 
 			   Packet_Ptr this_packet,
@@ -125,7 +122,6 @@ start_transmission_on_link(Simulation_Run_Ptr simulation_run,
  * Get a packet transmission time. For now it is a fixed value defined in
  * simparameters.h
  */
-
 double
 get_packet_transmission_time(void)
 {

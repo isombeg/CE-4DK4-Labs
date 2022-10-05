@@ -37,7 +37,6 @@
  * packet_arrival.c) is executed. An object can be attached to the event and
  * can be recovered in packet_arrival.c.
  */
-
 long int
 schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
 			      double event_time)
@@ -59,7 +58,6 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
  * queue if the server is busy. Otherwise it starts the transmission of the
  * packet. It then schedules the next packet arrival event.
  */
-
 void
 packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 {

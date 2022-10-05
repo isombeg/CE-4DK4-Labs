@@ -91,7 +91,6 @@ Clock_Ptr clock_new (void)
 /*
  * Given a pointer to a simulation_run, find out the current clock time.
  */
-
 double
 simulation_run_get_time (Simulation_Run_Ptr this_simulation_run)
 {
@@ -101,7 +100,6 @@ simulation_run_get_time (Simulation_Run_Ptr this_simulation_run)
 /*
  * Given a pointer to a simulation_run, set the clock time.
  */
-
 static
 void simulation_run_set_time (Simulation_Run_Ptr this_simulation_run,
 			      double time)
@@ -112,7 +110,6 @@ void simulation_run_set_time (Simulation_Run_Ptr this_simulation_run,
 /*
  * Given a pointer to a simulation_run, get simulation_run data.
  */
-
 void *
 simulation_run_data (Simulation_Run_Ptr this_simulation_run)
 {
@@ -122,7 +119,6 @@ simulation_run_data (Simulation_Run_Ptr this_simulation_run)
 /*
  * Given a pointer to a simulation_run, put simulation_run data.
  */
-
 void
 simulation_run_set_data (Simulation_Run_Ptr this_simulation_run, void * data)
 {
@@ -136,7 +132,6 @@ simulation_run_set_data (Simulation_Run_Ptr this_simulation_run, void * data)
  * event_contents pointer can also be passed which can be recovered when the
  * event function is called. The event list itself is a double linked list.
  */
-
 long int
 simulation_run_schedule_event(Simulation_Run_Ptr simulation_run,
 			      Event new_event, double new_event_time)
@@ -221,7 +216,6 @@ simulation_run_schedule_event(Simulation_Run_Ptr simulation_run,
  * list. The event content pointer is returned (which could be NULL). If the
  * requested event does not exist, it will return a NULL pointer.
  */
-
 void *
 simulation_run_deschedule_event(Simulation_Run_Ptr simulation_run,
 				long int event_id)
@@ -284,7 +278,6 @@ simulation_run_deschedule_event(Simulation_Run_Ptr simulation_run,
  * occur. This is called by execute_next_event which then passes execution to
  * its event function.
  */
-
 static Event_Container_Ptr
 simulation_run_get_event(Simulation_Run_Ptr simulation_run)
 {
@@ -317,7 +310,6 @@ simulation_run_get_event(Simulation_Run_Ptr simulation_run)
  * Get the next event from the event list and pass program execution to its
  * event function.
  */
-
 void
 simulation_run_execute_event(Simulation_Run_Ptr simulation_run)
 {
@@ -339,7 +331,6 @@ simulation_run_execute_event(Simulation_Run_Ptr simulation_run)
 /*
  * Free up simulation_run memory.
  */
-
 void
 simulation_run_free_memory(Simulation_Run_Ptr this_simulation_run)
 {
@@ -364,7 +355,6 @@ simulation_run_free_memory(Simulation_Run_Ptr this_simulation_run)
  * Create a new event list. This is called when a simulation_run is
  * created. The event list is included in the simulation_run.
  */
-
 static Eventlist_Ptr
 eventlist_new(void)
 {
@@ -381,7 +371,6 @@ eventlist_new(void)
 /*
  * Get a pointer to the eventlist. This is intended for use only by simlib.
  */
-
 static Eventlist_Ptr
 simulation_run_get_eventlist(Simulation_Run_Ptr simulation_run)
 {
@@ -391,7 +380,6 @@ simulation_run_get_eventlist(Simulation_Run_Ptr simulation_run)
 /*
  * Some functions that are only needed if trace is enabled.
  */
-
 #ifdef TRACE_ON
 
 static void
@@ -408,7 +396,6 @@ event_print_type(Event event)
  * Make a new (empty) FIFO queue. This will return a pointer to the created
  * Fifoqueue. The FIFO queue is a singly linked list.
  */
-
 Fifoqueue_Ptr
 fifoqueue_new(void)
 {
@@ -425,7 +412,6 @@ fifoqueue_new(void)
  * Put something into a FIFO queue. Whatever it is should be cast to a void
  * pointer.
  */
-
 void
 fifoqueue_put(Fifoqueue_Ptr queue_ptr, void * content_ptr)
 {
@@ -450,7 +436,6 @@ fifoqueue_put(Fifoqueue_Ptr queue_ptr, void * content_ptr)
  * Take something out of a FIFO queue. Whatever it is should be cast to a void
  * pointer.
  */
-
 void *
 fifoqueue_get(Fifoqueue_Ptr queue_ptr)
 {
@@ -475,7 +460,6 @@ fifoqueue_get(Fifoqueue_Ptr queue_ptr)
 /*
  * Get the number of objects currently in the Fifoqueue.
  */
-
 int
 fifoqueue_size(Fifoqueue_Ptr queue_ptr)
 {
@@ -485,7 +469,6 @@ fifoqueue_size(Fifoqueue_Ptr queue_ptr)
 /*
  * Get a pointer to the object at the front of the Fifoqueue.
  */
-
 void*
 fifoqueue_see_front(Fifoqueue_Ptr queue_ptr)
 {
@@ -497,7 +480,6 @@ fifoqueue_see_front(Fifoqueue_Ptr queue_ptr)
  *
  * Create and return a pointer to an empty server. The server is marked FREE.
  */
-
 Server_Ptr
 server_new(void)
 {
@@ -513,7 +495,6 @@ server_new(void)
  * Pass a server pointer and an object pointer to place the object in the
  * server. The server is marked BUSY.
  */
-
 void
 server_put(Server_Ptr server, void* content_ptr)
 {
@@ -531,7 +512,6 @@ server_put(Server_Ptr server, void* content_ptr)
  * called when the server is FREE. So the server state should be tested first to
  * be sure.
  */
-
 void *
 server_get(Server_Ptr server)
 {
@@ -551,7 +531,6 @@ server_get(Server_Ptr server)
 /*
  * Test if the server is FREE or BUSY.
  */
-
 Server_State
 server_state(Server_Ptr a_server)
 {
@@ -566,7 +545,6 @@ server_state(Server_Ptr a_server)
  * Functions for random streams, which permit multiple overlapping random number
  * generator streams (and seeds) at once.
  */
-
 Rand_Stream_Ptr
 rand_stream_new(unsigned seed)
 {
@@ -589,7 +567,6 @@ rand_stream_initialize(Rand_Stream_Ptr rand_stream, unsigned seed)
  * Use our own code for rand so that we can make it thread-safe. This generator
  * is a pretty poor one but sufficient for our purposes.
  */
-
 unsigned
 rand_stream_get(Rand_Stream_Ptr rand_stream)
 {
@@ -630,7 +607,6 @@ random_generator_initialize(unsigned iseed)
 /*
  * Generate a random number uniformly distributed over (0, 1).
  */
-
 double
 uniform_generator(void)
 {
@@ -649,7 +625,6 @@ if (r > 1.0) {
 /*
  * Generate exponentially distributed random numbers.
  */
-
 double
 exponential_generator(double mean)
 {
@@ -662,7 +637,6 @@ exponential_generator(double mean)
 /*
  * Create a front-end fo malloc that performs out-of-memory testing.
  */
-
 void *
 xmalloc(unsigned size)
 {
@@ -678,7 +652,6 @@ xmalloc(unsigned size)
 /*
  * Create a front-end fo calloc that performs out-of-memory testing.
  */
-
 void *
 xcalloc(unsigned num, unsigned size)
 {
@@ -694,7 +667,6 @@ xcalloc(unsigned num, unsigned size)
 /*
  * Create a front-end for free that checks for null pointers.
  */
-
 void
 xfree(void * ptr)
 {
