@@ -92,6 +92,9 @@ output_results(Simulation_Run_Ptr simulation_run)
   printf("Mean Delay (msec) = %.2f \n",
 	 1e3*data->accumulated_delay/data->number_of_packets_processed);
 
+  printf("# of Packet's delay exceeding 20msec = %f \n", data->packet_delay_exceed_20);
+  printf("Probability of the # of Packet's delay exceeding 20msec = %f \n", (data->packet_delay_exceed_20)/data->number_of_packets_processed);
+
   printf("\n");
 }
 

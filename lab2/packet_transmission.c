@@ -80,6 +80,12 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
   data->accumulated_delay += simulation_run_get_time(simulation_run) - 
     this_packet->arrive_time;
 
+  //Step 3
+  if ((simulation_run_get_time(simulation_run) - 
+    this_packet->arrive_time) > 20) {
+      data->packet_delay_exceed_20 += 1; //if a packet delay exceed 20msec sum them up
+    }
+
   /* Output activity blip every so often. */
   output_progress_msg_to_screen(simulation_run);
 
