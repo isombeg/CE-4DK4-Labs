@@ -77,10 +77,13 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * the buffer.
    */
 
-  if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_packet);
-  } else {
+  if(server_state(data->link) == FREE) {
+    // fifoqueue_put(data->buffer, (void*) new_packet);
     start_transmission_on_link(simulation_run, new_packet, data->link);
+  } else if (data->link2 != NULL && server_state(data->link2) == FREE) {
+    start_transmission_on_link(simulation_run, new_packet, data->link2);
+  } else {
+    fifoqueue_put(data->buffer, (void*) new_packet);
   }
 
   /* 

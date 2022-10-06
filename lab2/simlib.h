@@ -202,6 +202,9 @@ fifoqueue_see_front(Fifoqueue_Ptr);
 Server_Ptr
 server_new(void);
 
+Server_Ptr
+servers_new(int server_count);
+
 void
 server_put(Server_Ptr, void*);
 
