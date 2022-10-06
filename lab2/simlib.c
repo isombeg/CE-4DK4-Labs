@@ -491,6 +491,19 @@ server_new(void)
   return server_ptr;
 }
 
+Server_Ptr
+servers_new(int server_count)
+{
+  Server_Ptr server_ptr;
+
+  server_ptr = (Server_Ptr) xmalloc(server_count*sizeof(Server));
+  for(int i = 0; i < server_count; i++){
+    server_ptr[i].customer_in_service = NULL;
+    server_ptr[i].state = FREE;
+  }
+  return server_ptr;
+}
+
 /*
  * Pass a server pointer and an object pointer to place the object in the
  * server. The server is marked BUSY.
