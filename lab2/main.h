@@ -41,7 +41,8 @@ typedef struct _simulation_run_data_
   long int arrival_count;
   long int number_of_packets_processed;
   double accumulated_delay;
-  double packet_delay_exceed_20; // Step 3
+  double voice_accumulated_delay; // Step 6
+  int packet_delay_exceed_20; // Step 3
   unsigned random_seed;
 
   // Input Parameters
@@ -57,6 +58,7 @@ typedef struct _packet_
   double service_time;
   int source_id;
   int destination_id;
+  int packet_type; //step 6 if packet_type = 0 then it is data, if 1 it is voice
   Packet_Status status;
 } Packet, * Packet_Ptr;
 

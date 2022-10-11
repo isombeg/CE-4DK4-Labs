@@ -56,7 +56,7 @@ cleanup_memory (Simulation_Run_Ptr simulation_run)
 
   simulation_run_free_memory(simulation_run); /* Clean up the simulation_run. */
 
-  data->packet_delay_exceed_20 = 0; // Clean up packet_delay_exceed_20
+  // data->packet_delay_exceed_20 = 0; // Clean up packet_delay_exceed_20
 }
 
 

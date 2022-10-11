@@ -50,6 +50,19 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
   return simulation_run_schedule_event(simulation_run, event, event_time);
 }
 
+long int
+schedule_voice_packet_arrival_event(Simulation_Run_Ptr simulation_run,
+			      double event_time)
+{
+  Event event;
+
+  event.description = "Voice Packet Arrival";
+  event.function = voice_packet_arrival_event;
+  event.attachment = (void *) NULL;
+
+  return simulation_run_schedule_event(simulation_run, event, event_time);
+}
+
 /******************************************************************************/
 
 /*
@@ -68,6 +81,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   data->arrival_count++;
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->packet_type = 0;
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
   new_packet->service_time = get_packet_transmission_time();
   new_packet->status = WAITING;
@@ -93,5 +107,32 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 			exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
 }
 
+void voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr) 
+{
+  Simulation_Run_Data_Ptr data;
+  Packet_Ptr new_voice;
+
+
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  data->arrival_count++;
+
+ 
+  new_voice = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_voice->packet_type = 1; // Step6
+  new_voice->arrive_time = simulation_run_get_time(simulation_run);
+  new_voice->service_time = get_voice_packet_transmission_time();
+  new_voice->status = WAITING;
+
+
+  if(server_state(data->link) == BUSY) {
+    fifoqueue_put(data->buffer, (void*) new_voice);
+  } else {
+    start_transmission_on_link(simulation_run, new_voice, data->link);
+  }
+
+  schedule_voice_packet_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) +
+			exponential_generator((double) 1/VOICE_PACKET_ARRIVAL_RATE));
+}
 
 

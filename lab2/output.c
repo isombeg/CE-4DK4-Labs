@@ -88,34 +88,39 @@ output_results(Simulation_Run_Ptr simulation_run)
 	 data->number_of_packets_processed, xmtted_fraction);
 
   printf("Arrival rate = %.3f packets/second \n", (double) PACKET_ARRIVAL_RATE);
+  printf("Voice Arrival rate = %3.f packets/second \n", (double) VOICE_PACKET_ARRIVAL_RATE);
 
   printf("Mean Delay (msec) = %.2f \n",
 	 1e3*data->accumulated_delay/data->number_of_packets_processed);
+
+  // Step 6 change
+   printf("Voice Packet Mean Delay (msec) = %.2f \n",
+	 1e3*data->voice_accumulated_delay/data->number_of_packets_processed); 
    
-  printf("# of Packet's delay exceeding 20msec = %f \n", data->packet_delay_exceed_20);
-  printf("Probability of the # of Packet's delay exceeding 20msec = %f \n", (data->packet_delay_exceed_20)/data->number_of_packets_processed);
+  // printf("# of Packet's delay exceeding 20msec = %d \n", data->packet_delay_exceed_20);
+  // printf("Probability of the # of Packet's delay exceeding 20msec = %0.10f \n", (((double)data->packet_delay_exceed_20)/(double)(data->number_of_packets_processed))*100);
 
   printf("\n");
 }
 
-void
-write_to_csv(FILE* fpt, Simulation_Run_Data_Ptr data)
-{
-  double xmtted_fraction = (double) data->number_of_packets_processed /
-    data->arrival_count;
+// void
+// write_to_csv(FILE* fpt, Simulation_Run_Data_Ptr data)
+// {
+//   double xmtted_fraction = (double) data->number_of_packets_processed /
+//     data->arrival_count;
 
-  fprintf(
-    fpt,
-    "$u, %d, %d, %d, %f, %f, %d, %f",
-    data->random_seed,
-    data->arrival_count,
-    data->number_of_packets_processed,
-    xmtted_fraction,
-    // !: packet arrival rate
-    1e3*data->accumulated_delay/data->number_of_packets_processed,
-    data->packet_delay_exceed_20,
-    (data->packet_delay_exceed_20)/data->number_of_packets_processed
-  );
-}
+//   fprintf(
+//     fpt,
+//     "$u, %d, %d, %d, %f, %f, %d, %f",
+//     data->random_seed,
+//     data->arrival_count,
+//     data->number_of_packets_processed,
+//     xmtted_fraction,
+//     // !: packet arrival rate
+//     1e3*data->accumulated_delay/data->number_of_packets_processed,
+//     data->packet_delay_exceed_20,
+//     (data->packet_delay_exceed_20)/data->number_of_packets_processed
+//   );
+// }
 
 

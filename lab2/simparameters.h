@@ -28,11 +28,17 @@
 
 /******************************************************************************/
 
-#define PACKET_ARRIVAL_RATE 100 /* packets per second */
-#define PACKET_LENGTH 2000 /* bits */
+
+// Data traffic step 6
+#define PACKET_ARRIVAL_RATE 22/* packets per second*/
+#define PACKET_LENGTH 40000 /* bits */
+
+// Voice traffic step 6
+#define VOICE_PACKET_ARRIVAL_RATE 50/* packets per second*/
+#define VOICE_PACKET_LENGTH 1776 /* bits */
 
 #define LINK_BIT_RATE 1e6 /* bits per second */
-#define RUNLENGTH 10e6 /* packets */
+#define RUNLENGTH 10e6 /* packets - default is 10e6*/ 
 
 #define STUDENT_NUMBER_GJ 400137394
 #define STUDENT_NUMBER_CARLOS 400184894
@@ -40,9 +46,11 @@
 
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 333333, 444444, STUDENT_NUMBER_GJ, STUDENT_NUMBER_CARLOS, STUDENT_NUMBER_RAFI, 336533, 293343, 183233, 523033, 734392
+#define RANDOM_SEED_LIST 333333, 444444, STUDENT_NUMBER_GJ, STUDENT_NUMBER_CARLOS, STUDENT_NUMBER_RAFI, 555555, 666666, 777777, 888888, 999999
 
 #define PACKET_XMT_TIME ((double) PACKET_LENGTH/LINK_BIT_RATE)
+#define VOICE_PACKET_XMT_TIME ((double) VOICE_PACKET_LENGTH/LINK_BIT_RATE) // Step 6
+
 #define BLIPRATE (RUNLENGTH/1000)
 
 /******************************************************************************/

@@ -82,6 +82,7 @@ main(void)
     data.arrival_count = 0;
     data.number_of_packets_processed = 0;
     data.accumulated_delay = 0.0;
+    data.voice_accumulated_delay = 0.0; // Step 6
     data.random_seed = random_seed;
  
     /* 
@@ -89,6 +90,8 @@ main(void)
      */
 
     data.buffer = fifoqueue_new();
+    data.voice.buffer = fifoqueue_new(); // step 7
+
     data.link   = server_new();
     /* 
      * Set the random number generator seed for this run.
@@ -103,6 +106,9 @@ main(void)
     schedule_packet_arrival_event(simulation_run, 
 				  simulation_run_get_time(simulation_run));
 
+    schedule_voice_packet_arrival_event(simulation_run, 
+          simulation_run_get_time(simulation_run));
+    
     /* 
      * Execute events until we are finished. 
      */
