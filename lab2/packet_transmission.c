@@ -78,6 +78,7 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
   /* Collect statistics. */
   data->number_of_packets_processed++;
 
+  // Step 6
   if (this_packet->packet_type == 0) {
     data->accumulated_delay += simulation_run_get_time(simulation_run) - 
       this_packet->arrive_time;
@@ -107,7 +108,11 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
    * out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
+  if (fifoqueue_size(data->voice_buffer) > 0) {
+    next_packet = (Packet_Ptr) fifoqueue_get(data->voice_buffer);
+    start_transmission_on_link(simulation_run, next_packet, link);
+  } 
+  else if (fifoqueue_size(data->buffer) > 0) {
     next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
     start_transmission_on_link(simulation_run, next_packet, link);
   }

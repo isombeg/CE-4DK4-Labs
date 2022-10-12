@@ -30,8 +30,8 @@
 
 
 // Data traffic step 6
-#define PACKET_ARRIVAL_RATE 22/* packets per second*/
-#define PACKET_LENGTH 40000 /* bits */
+#define PACKET_ARRIVAL_RATE 21/* packets per second*/
+#define PACKET_LENGTH 40e3 /* bits */
 
 // Voice traffic step 6
 #define VOICE_PACKET_ARRIVAL_RATE 50/* packets per second*/

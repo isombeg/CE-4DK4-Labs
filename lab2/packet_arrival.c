@@ -125,7 +125,7 @@ void voice_packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 
 
   if(server_state(data->link) == BUSY) {
-    fifoqueue_put(data->buffer, (void*) new_voice);
+    fifoqueue_put(data->voice_buffer, (void*) new_voice); //step 7
   } else {
     start_transmission_on_link(simulation_run, new_voice, data->link);
   }

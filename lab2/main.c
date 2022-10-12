@@ -90,9 +90,9 @@ main(void)
      */
 
     data.buffer = fifoqueue_new();
-    data.voice.buffer = fifoqueue_new(); // step 7
-
-    data.link   = server_new();
+    data.voice_buffer = fifoqueue_new(); // step 7
+    data.link = server_new();
+    
     /* 
      * Set the random number generator seed for this run.
      */

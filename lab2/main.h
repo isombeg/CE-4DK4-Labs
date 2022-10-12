@@ -37,12 +37,19 @@ typedef struct _simulation_run_data_
 {
   Fifoqueue_Ptr buffer;
   Server_Ptr link;
+
+  Fifoqueue_Ptr voice_buffer;
+  Server_Ptr voice_link;
+
   long int blip_counter;
   long int arrival_count;
   long int number_of_packets_processed;
   double accumulated_delay;
+
+  double number_of_voice_processed;
   double voice_accumulated_delay; // Step 6
   int packet_delay_exceed_20; // Step 3
+
   unsigned random_seed;
 
   // Input Parameters
