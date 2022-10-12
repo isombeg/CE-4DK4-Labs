@@ -118,4 +118,22 @@ write_to_csv(FILE* fpt, Simulation_Run_Data_Ptr data)
   );
 }
 
+FILE* create_step4_csv(){
+    FILE* fpt = fopen("step4_run_results.csv", "w");
+    fprintf(fpt, "arrival rate (bits/sec), mean delay (msec)\n");
+    return fpt;
+}
+
+void flush_step4(FILE* fpt, int data_point_count, int increment, double* mean_delays){
+    for(int i = 0; i < data_point_count; i++){
+        fprintf(
+            fpt,
+            "%d, %.2f\n",
+            increment*(i+1),
+            mean_delays[i]
+        );
+    }
+    fclose(fpt);
+}
+
 

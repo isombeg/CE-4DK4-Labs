@@ -43,6 +43,12 @@ output_progress_msg_to_screen(Simulation_Run_Ptr);
 void
 output_results(Simulation_Run_Ptr);
 
+FILE*
+create_step4_csv();
+
+void
+flush_step4(FILE*, int, int, double*);
+
 /******************************************************************************/
 
 #endif /* output.h */
