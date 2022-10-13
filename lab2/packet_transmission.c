@@ -134,4 +134,10 @@ get_packet_transmission_time(void)
   return ((double) PACKET_XMT_TIME);
 }
 
+double
+get_packet_transmission_time_2_3(void)
+{
+  return ((double) PACKET_XMT_TIME_2_3);
+}
+
 

@@ -28,10 +28,14 @@
 
 /******************************************************************************/
 
-#define PACKET_ARRIVAL_RATE 100 /* packets per second */
-#define PACKET_LENGTH 2000 /* bits */
+#define PACKET_ARRIVAL_RATE 700 /* packets per second */
+#define PACKET_ARRIVAL_RATE_2_3 = 500 
 
-#define LINK_BIT_RATE 500e3 /* bits per second */
+#define PACKET_LENGTH 1000 /* bits */
+
+#define LINK_BIT_RATE 2e6 /* bits per second */
+#define LINK_BIT_RATE_2_3 1e6
+
 #define RUNLENGTH 10e6 /* packets */
 
 #define STUDENT_NUMBER_GJ 400137394
@@ -43,6 +47,8 @@
 #define RANDOM_SEED_LIST 333333, 444444, STUDENT_NUMBER_GJ, STUDENT_NUMBER_CARLOS, STUDENT_NUMBER_RAFI, 336533, 293343, 183233, 523033, 734392
 
 #define PACKET_XMT_TIME ((double) PACKET_LENGTH/LINK_BIT_RATE)
+#define PACKET_XMT_TIME_2_3 ((double) PACKET_LENGTH/LINK_BIT_RATE_2_3)
+
 #define BLIPRATE (RUNLENGTH/1000)
 
 /******************************************************************************/

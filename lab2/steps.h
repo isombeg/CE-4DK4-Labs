@@ -4,5 +4,6 @@
 void step2();
 void step3();
 void step4();
+void step5();
 
 #endif

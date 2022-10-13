@@ -323,6 +323,10 @@ void step5(){
 
         schedule_packet_arrival_event(simulation_run,
                                       simulation_run_get_time(simulation_run));
+        schedule_packet_arrival_event_2(simulation_run,
+                                      simulation_run_get_time(simulation_run));
+        schedule_packet_arrival_event_3(simulation_run,
+                                      simulation_run_get_time(simulation_run));
 
         /*
         * Execute events until we are finished.

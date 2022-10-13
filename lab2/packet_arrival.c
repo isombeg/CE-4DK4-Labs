@@ -77,13 +77,20 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * the buffer.
    */
 
-  if(server_state(data->link) == FREE) {
-    // fifoqueue_put(data->buffer, (void*) new_packet);
-    start_transmission_on_link(simulation_run, new_packet, data->link);
-  } else if (data->link2 != NULL && server_state(data->link2) == FREE) {
-    start_transmission_on_link(simulation_run, new_packet, data->link2);
-  } else {
+  // if(server_state(data->link) == FREE) {
+  //   // fifoqueue_put(data->buffer, (void*) new_packet);
+  //   start_transmission_on_link(simulation_run, new_packet, data->link);
+  // } else if (data->link2 != NULL && server_state(data->link2) == FREE) {
+  //   start_transmission_on_link(simulation_run, new_packet, data->link2);
+  // } else {
+  //   fifoqueue_put(data->buffer, (void*) new_packet);
+  // }
+
+  // Start transmission or put into buffer for all 3 switches
+  if (server_state(data->link) == BUSY) {
     fifoqueue_put(data->buffer, (void*) new_packet);
+  } else {
+    start_transmission_on_link(simulation_run, new_packet, data->link);
   }
 
   /* 
@@ -93,8 +100,75 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 
   schedule_packet_arrival_event(simulation_run,
 			simulation_run_get_time(simulation_run) +
-			exponential_generator((double) 1/data->arrival_rate));
+			exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
 }
 
+void
+packet_arrival_event_2(Simulation_Run_Ptr simulation_run, void * ptr)
+{
+  Simulation_Run_Data_Ptr data;
+  Packet_Ptr new_packet;
+
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  data->arrival_count++;
+
+  new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->arrive_time = simulation_run_get_time(simulation_run);
+  new_packet->service_time = get_packet_transmission_time_2_3();
+  new_packet->status = WAITING;
+
+  /* 
+   * Start transmission if the data link is free. Otherwise put the packet into
+   * the buffer.
+   */
+  if (server_state(data->link2) == BUSY) {
+    fifoqueue_put(data->buffer2, (void*) new_packet);
+  } else {
+    start_transmission_on_link(simulation_run, new_packet, data->link2);
+  }
+
+  /* 
+   * Schedule the next packet arrival. Independent, exponentially distributed
+   * interarrival times gives us Poisson process arrivals.
+   */
+
+  schedule_packet_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) +
+			exponential_generator((double) 1/PACKET_ARRIVAL_RATE_2_3));
+}
+
+void
+packet_arrival_event_3(Simulation_Run_Ptr simulation_run, void * ptr)
+{
+  Simulation_Run_Data_Ptr data;
+  Packet_Ptr new_packet;
+
+  data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
+  data->arrival_count++;
+
+  new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
+  new_packet->arrive_time = simulation_run_get_time(simulation_run);
+  new_packet->service_time = get_packet_transmission_time_2_3();
+  new_packet->status = WAITING;
+
+  /* 
+   * Start transmission if the data link is free. Otherwise put the packet into
+   * the buffer.
+   */
+  if (server_state(data->link3) == BUSY) {
+    fifoqueue_put(data->buffer3, (void*) new_packet);
+  } else {
+    start_transmission_on_link(simulation_run, new_packet, data->link3);
+  }
+
+  /* 
+   * Schedule the next packet arrival. Independent, exponentially distributed
+   * interarrival times gives us Poisson process arrivals.
+   */
+
+  schedule_packet_arrival_event(simulation_run,
+			simulation_run_get_time(simulation_run) +
+			exponential_generator((double) 1/PACKET_ARRIVAL_RATE_2_3));
+}
 
 
