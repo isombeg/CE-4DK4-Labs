@@ -45,10 +45,11 @@ schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
 				       int* id)
 {
   Event event;
-    printf("id: %d (C)\n", *id);
+
   event.description = "Packet Xmt End";
   event.function = end_packet_transmission_event;
   event.attachment = (void *) id;
+  printf("id: %d (schedule_end_packet_transmission_event)\n", *((int*)event.attachment));
 
   return simulation_run_schedule_event(simulation_run, event, event_time);
 }
@@ -67,9 +68,10 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * ptr)
   Simulation_Run_Data_Ptr data;
   Packet_Ptr this_packet, next_packet;
   Server_Ptr link;
+  Fifoqueue_Ptr buffer;
 
   int id = *((int *) ptr);
-    printf("id: %d (B)\n", id);
+  printf("id: %d (end_packet_transmission_event)\n", id);
   TRACE(printf("End Of Packet.\n"););
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
@@ -78,6 +80,7 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * Packet transmission is finished. Take the packet off the data link.
    */
   link = get_link_from_id(data, id);
+  buffer = get_buffer_from_id(data, id);
   this_packet = (Packet_Ptr) server_get(link);
 
   /* Collect statistics. */
@@ -102,8 +105,8 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
-    next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
+  if(fifoqueue_size(buffer) > 0) {
+    next_packet = (Packet_Ptr) fifoqueue_get(buffer);
     start_transmission_on_link(simulation_run, next_packet, link, id);
   }
 }
@@ -120,6 +123,7 @@ start_transmission_on_link(Simulation_Run_Ptr simulation_run,
                int id)
 {
   TRACE(printf("Start Of Packet.\n");)
+    printf("id: %d (start_transmission_on_link)\n", id);
 
   server_put(link, (void*) this_packet);
   this_packet->status = XMTTING;
@@ -132,7 +136,9 @@ xmission_end_time,
 	 (void *) &id);
 
   if(id == 1){
+      printf("Getting next link id: ");
       int next_link_id = get_next_link(simulation_run_data((simulation_run)));
+      printf("next_link_id: %d (start_transmission_on_link)\n", next_link_id);
       schedule_packet_arrival_event(simulation_run, xmission_end_time, &next_link_id);
   }
 }

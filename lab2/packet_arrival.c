@@ -67,6 +67,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
   Server_Ptr link;
   Fifoqueue_Ptr buffer;
   int id = *((int *) ptr);
+  printf("id: %d (packet_arrival_event)\n", id);
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   data->arrival_count++;

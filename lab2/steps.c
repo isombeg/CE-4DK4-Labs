@@ -372,6 +372,7 @@ void step5(){
 }
 
 Server_Ptr get_link_from_id(Simulation_Run_Data_Ptr data, int id){
+    printf("id: %d (get_link_from_id)\n", id);
     if(id == 1){
         return data->link;
     } else if(id == 2){
@@ -380,6 +381,7 @@ Server_Ptr get_link_from_id(Simulation_Run_Data_Ptr data, int id){
 }
 
 Fifoqueue_Ptr get_buffer_from_id(Simulation_Run_Data_Ptr data, int id){
+    printf("id: %d (get_buffer_from_id)\n", id);
     if(id == 1){
         return data->buffer;
     } else if(id == 2){
