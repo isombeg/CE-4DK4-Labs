@@ -48,7 +48,7 @@
 int
 main(void)
 {
-  step4();
+  step5();
   return 0;
 }
 

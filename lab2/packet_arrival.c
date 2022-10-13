@@ -28,6 +28,7 @@
 #include "main.h"
 #include "packet_transmission.h"
 #include "packet_arrival.h"
+#include "steps.h"
 
 /******************************************************************************/
 
@@ -39,13 +40,13 @@
  */
 long int
 schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
-			      double event_time)
+			      double event_time, int * link_id)
 {
   Event event;
 
   event.description = "Packet Arrival";
   event.function = packet_arrival_event;
-  event.attachment = (void *) NULL;
+  event.attachment = (void *) link_id;
 
   return simulation_run_schedule_event(simulation_run, event, event_time);
 }
@@ -63,9 +64,15 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 {
   Simulation_Run_Data_Ptr data;
   Packet_Ptr new_packet;
+  Server_Ptr link;
+  Fifoqueue_Ptr buffer;
+  int id = *((int *) ptr);
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   data->arrival_count++;
+
+  link = get_link_from_id(data, id);
+  buffer = get_buffer_from_id(data, id);
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
   new_packet->arrive_time = simulation_run_get_time(simulation_run);
@@ -77,13 +84,10 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
    * the buffer.
    */
 
-  if(server_state(data->link) == FREE) {
-    // fifoqueue_put(data->buffer, (void*) new_packet);
-    start_transmission_on_link(simulation_run, new_packet, data->link);
-  } else if (data->link2 != NULL && server_state(data->link2) == FREE) {
-    start_transmission_on_link(simulation_run, new_packet, data->link2);
+  if(server_state(link) == FREE) {
+    start_transmission_on_link(simulation_run, new_packet, link, id);
   } else {
-    fifoqueue_put(data->buffer, (void*) new_packet);
+    fifoqueue_put(buffer, (void*) new_packet);
   }
 
   /* 
@@ -93,7 +97,8 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 
   schedule_packet_arrival_event(simulation_run,
 			simulation_run_get_time(simulation_run) +
-			exponential_generator((double) 1/data->arrival_rate));
+			exponential_generator((double) 1/data->arrival_rate),
+            &id);
 }
 
 
