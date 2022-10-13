@@ -143,6 +143,7 @@ simulation_run_schedule_event(Simulation_Run_Ptr simulation_run,
   Eventlist_Ptr event_list;
   static long int event_id = 1;
 
+  printf("id: %d \tevent_type: %s \t(simulation_run_schedule_event)\n", *((int*)new_event.attachment), new_event.description);
   current_time = simulation_run_get_time(simulation_run);
   event_list = simulation_run_get_eventlist(simulation_run);
 
@@ -323,6 +324,7 @@ simulation_run_execute_event(Simulation_Run_Ptr simulation_run)
   TRACE(event_print_type(current_container->event);)
   TRACE(printf("occurring at %.3f\n", simulation_run_get_time(simulation_run));)
 
+  printf("id: %d (%s)\t", *((int*)(current_container->event.attachment)), current_container->event.description);
   (*(current_container->event.function))(simulation_run,
 			current_container->event.attachment);
   xfree(current_container);

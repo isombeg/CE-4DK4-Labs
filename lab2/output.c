@@ -98,26 +98,6 @@ output_results(Simulation_Run_Ptr simulation_run)
   printf("\n");
 }
 
-void
-write_to_csv(FILE* fpt, Simulation_Run_Data_Ptr data)
-{
-  double xmtted_fraction = (double) data->number_of_packets_processed /
-    data->arrival_count;
-
-  fprintf(
-    fpt,
-    "$u, %d, %d, %d, %f, %f, %d, %f",
-    data->random_seed,
-    data->arrival_count,
-    data->number_of_packets_processed,
-    xmtted_fraction,
-    // !: packet arrival rate
-    1e3*data->accumulated_delay/data->number_of_packets_processed,
-    data->packet_delay_exceed_20,
-    (data->packet_delay_exceed_20)/data->number_of_packets_processed
-  );
-}
-
 FILE* create_step4_csv(){
     FILE* fpt = fopen("step4_run_results.csv", "w");
     fprintf(fpt, "arrival rate (bits/sec), mean delay (msec)\n");

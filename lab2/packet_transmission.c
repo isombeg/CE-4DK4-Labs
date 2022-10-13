@@ -28,6 +28,8 @@
 #include "main.h"
 #include "output.h"
 #include "packet_transmission.h"
+#include "packet_arrival.h"
+#include "steps.h"
 
 /******************************************************************************/
 
@@ -40,13 +42,14 @@
 long
 schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
 				       double event_time,
-				       Server_Ptr link)
+				       int* id)
 {
   Event event;
 
   event.description = "Packet Xmt End";
   event.function = end_packet_transmission_event;
-  event.attachment = (void *) link;
+  event.attachment = (void *) id;
+  printf("id: %d (schedule_end_packet_transmission_event)\n", *((int*)event.attachment));
 
   return simulation_run_schedule_event(simulation_run, event, event_time);
 }
@@ -60,11 +63,15 @@ schedule_end_packet_transmission_event(Simulation_Run_Ptr simulation_run,
  * starts the transmission of the next packet.
  */
 void
-end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
+end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * ptr)
 {
   Simulation_Run_Data_Ptr data;
   Packet_Ptr this_packet, next_packet;
+  Server_Ptr link;
+  Fifoqueue_Ptr buffer;
 
+  int id = *((int *) ptr);
+  printf("id: %d (end_packet_transmission_event)\n", id);
   TRACE(printf("End Of Packet.\n"););
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
@@ -72,7 +79,8 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
   /* 
    * Packet transmission is finished. Take the packet off the data link.
    */
-
+  link = get_link_from_id(data, id);
+  buffer = get_buffer_from_id(data, id);
   this_packet = (Packet_Ptr) server_get(link);
 
   /* Collect statistics. */
@@ -97,9 +105,9 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
    * out and transmit it immediately.
   */
 
-  if(fifoqueue_size(data->buffer) > 0) {
-    next_packet = (Packet_Ptr) fifoqueue_get(data->buffer);
-    start_transmission_on_link(simulation_run, next_packet, link);
+  if(fifoqueue_size(buffer) > 0) {
+    next_packet = (Packet_Ptr) fifoqueue_get(buffer);
+    start_transmission_on_link(simulation_run, next_packet, link, id);
   }
 }
 
@@ -111,17 +119,28 @@ end_packet_transmission_event(Simulation_Run_Ptr simulation_run, void * link)
 void
 start_transmission_on_link(Simulation_Run_Ptr simulation_run, 
 			   Packet_Ptr this_packet,
-			   Server_Ptr link)
+			   Server_Ptr link,
+               int id)
 {
   TRACE(printf("Start Of Packet.\n");)
+    printf("id: %d (start_transmission_on_link)\n", id);
 
   server_put(link, (void*) this_packet);
   this_packet->status = XMTTING;
 
+  double xmission_end_time = simulation_run_get_time(simulation_run) + this_packet->service_time;
+
   /* Schedule the end of packet transmission event. */
   schedule_end_packet_transmission_event(simulation_run,
-	 simulation_run_get_time(simulation_run) + this_packet->service_time,
-	 (void *) link);
+xmission_end_time,
+	 (void *) &id);
+
+  if(id == 1){
+      printf("Getting next link id: ");
+      int next_link_id = get_next_link(simulation_run_data((simulation_run)));
+      printf("next_link_id: %d (start_transmission_on_link)\n", next_link_id);
+      schedule_packet_arrival_event(simulation_run, xmission_end_time, &next_link_id);
+  }
 }
 
 /*

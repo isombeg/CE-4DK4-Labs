@@ -37,7 +37,7 @@
  */
 
 void
-start_transmission_on_link(Simulation_Run_Ptr, Packet_Ptr, Server_Ptr);
+start_transmission_on_link(Simulation_Run_Ptr, Packet_Ptr, Server_Ptr, int);
 
 void
 end_packet_transmission_event(Simulation_Run_Ptr, void*);
