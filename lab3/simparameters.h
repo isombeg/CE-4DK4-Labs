@@ -29,15 +29,15 @@
 #define _SIMPARAMETERS_H_
 
 /*******************************************************************************/
-
-#define Call_ARRIVALRATE 3   /* calls/minute */
-#define MEAN_CALL_DURATION 3 /* minutes */
+// TODO: Change everywhere this is referenced
+#define Call_ARRIVALRATE 0.3   /* calls/minute */
+#define MEAN_CALL_DURATION 1 /* minutes */
 #define RUNLENGTH 5e6 /* number of successful calls */
 #define BLIPRATE 1e3
 #define NUMBER_OF_CHANNELS 11
 
 /* Comma separated list of random seeds to run. */
-#define RANDOM_SEED_LIST 333, 4444, 55555
+#define RANDOM_SEED_LIST 333, 4444, 55555, 400137394
 
 /*******************************************************************************/
 

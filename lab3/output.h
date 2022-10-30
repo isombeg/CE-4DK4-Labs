@@ -47,6 +47,9 @@ output_progress_msg_to_screen(Simulation_Run_Ptr);
 void
 output_results(Simulation_Run_Ptr);
 
+FILE* create_step2_csv();
+void write_step2(FILE* fpt, double call_arrival_rate, int number_of_channels, double block_prob);
+
 /*******************************************************************************/
 
 #endif /* output.h */
