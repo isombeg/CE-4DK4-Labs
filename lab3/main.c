@@ -126,6 +126,6 @@ int main(void)
 
 double block_fraction(Simulation_Run_Ptr this_simulation_run){
   Simulation_Run_Data_Ptr sim_data = (Simulation_Run_Data_Ptr) simulation_run_data(this_simulation_run);
-  return (double) (sim_data->call_arrival_count -
+  return 1 - (double) (sim_data->call_arrival_count -
     sim_data->blocked_call_count)/sim_data->call_arrival_count;
 }
