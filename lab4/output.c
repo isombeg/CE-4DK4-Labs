@@ -67,6 +67,9 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   Simulation_Run_Data_Ptr sim_data;
 
   sim_data = (Simulation_Run_Data_Ptr) simulation_run_data(this_simulation_run);
+  
+  //step 3
+  double total_runtime = simulation_run_get_time(this_simulation_run);
 
   printf("\n");
   printf("Random Seed = %d \n", sim_data->random_seed);
@@ -80,6 +83,9 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
   printf("Mean Delay   = %.1f \n",
 	 sim_data->accumulated_delay/sim_data->number_of_packets_processed);
+
+  //step 3
+  printf("Throughput = %f \n", (sim_data->number_of_packets_processed + sim_data->number_of_collisions)/total_runtime);
 
   printf("Mean collisions per packet = %.3f\n",
 	 (double) sim_data->number_of_collisions / 
