@@ -118,7 +118,7 @@ call_arrival_event(Simulation_Run_Ptr simulation_run, void * ptr)
 
   /* Schedule the next call arrival. */
   schedule_call_arrival_event(simulation_run,
-	      now + exponential_generator((double) 1/Call_ARRIVALRATE));
+	      now + exponential_generator((double) 1/sim_data->call_arrival_rate));
 }
 
 /*******************************************************************************/
@@ -137,7 +137,7 @@ Channel_Ptr get_free_channel(Simulation_Run_Ptr simulation_run)
   sim_data = simulation_run_data(simulation_run);
   channels = sim_data->channels;
 
-  for (i=0; i<NUMBER_OF_CHANNELS; i++) {
+  for (i=0; i<sim_data->number_of_channels; i++) {
     if (server_state(*(channels+i)) == FREE)
       return *(channels+i);
   }

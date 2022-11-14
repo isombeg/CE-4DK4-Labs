@@ -70,7 +70,9 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
   printf("\n");
 
-  printf("random seed = %d \n", sim_data->random_seed);
+  printf("random seed = %u \n", sim_data->random_seed);
+  printf("call arrival rate = %f\n", sim_data->call_arrival_rate);
+  printf("number of channels = %d\n", sim_data->number_of_channels);
   printf("call arrival count = %ld \n", sim_data->call_arrival_count);
   //printf("blocked call count = %ld \n", sim_data->blocked_call_count);
   printf("Hang Up Count = %d \n", sim_data->hang_up); //step 4
@@ -97,5 +99,16 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   printf("\n");
 }
 
+FILE* create_step2_csv(){
+  FILE* fpt = fopen("step2_run_results.csv", "w");
+  fprintf(fpt, "call arrival rate (calls/sec), number of channels, blocking probability\n");
+  return fpt;
+}
 
-
+void write_step2(FILE* fpt, double call_arrival_rate, int number_of_channels, double block_prob){
+  fprintf(
+    fpt,
+    "%f, %d, %f\n",
+    call_arrival_rate, number_of_channels, block_prob
+  );
+}
