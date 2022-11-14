@@ -78,8 +78,15 @@ end_call_on_channel_event(Simulation_Run_Ptr simulation_run, void * c_ptr)
   TRACE(printf("End Of Call.\n"););
 
   /* Collect statistics. */
+  //step 4
+  double hang_up_time = exponential_generator((double) W);
+
+  // if (hang_up_time < (now - this_call->arrive_time)) {
+  //   sim_data->hang_up++;
+  // } else {
   sim_data->number_of_calls_processed++;
   sim_data->accumulated_call_time += now - this_call->arrive_time;
+  
 
   output_progress_msg_to_screen(simulation_run);
 

@@ -70,6 +70,21 @@ int main(void)
         /* Add our data definitions to the simulation_run. */
         simulation_run_set_data(simulation_run, (void *) & data);
 
+<<<<<<< HEAD
+    /* Initialize our simulation_run data variables. */
+    data.blip_counter = 0;
+    data.call_arrival_count = 0;
+    data.calls_processed = 0;
+    data.blocked_call_count = 0;
+    data.number_of_calls_processed = 0;
+    data.accumulated_call_time = 0.0;
+    data.random_seed = random_seed;
+    data.hang_up = 0; //step 4
+    data.mean_time = 0; //step 4
+    data.in_queue = 0; //step 4
+    data.amt_wait_t_sec = 0; //step 5
+    data.buffer = fifoqueue_new(); //step 4
+=======
         /* Initialize our simulation_run data variables. */
         data.blip_counter = 0;
         data.call_arrival_count = 0;
@@ -80,6 +95,7 @@ int main(void)
         data.random_seed = random_seed;
         data.call_arrival_rate = call_arrival_rate;
         data.number_of_channels = number_of_channels;
+>>>>>>> origin/master
 
         /* Create the channels. */
         data.channels = (Channel_Ptr *) xcalloc((int) number_of_channels,

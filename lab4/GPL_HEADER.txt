@@ -1,9 +1,9 @@
 
 /*
  * 
- * Call Blocking in Circuit Switched Networks
+ * Simulation of A Single Server Queueing System
  * 
- * Copyright (C) 2014 Terence D. Todd
+ * Copyright (C) 2007 Terence D. Todd
  * Hamilton, Ontario, CANADA
  * todd@mcmaster.ca
  * 
@@ -22,30 +22,3 @@
  * <http://www.gnu.org/licenses/>.
  * 
  */
-
-/*******************************************************************************/
-
-#ifndef _Call_DURATION_
-#define _Call_DURATION_
-
-/*******************************************************************************/
-
-#include "trace.h"
-#include "main.h"
-
-/*******************************************************************************/
-
-/*
- *
- * Function prototypes
- *
- */
-
-double get_call_duration(void);
-double get_call_hold_duration(void);
-/*******************************************************************************/
-
-#endif /* packetduration.h */
-
-
-

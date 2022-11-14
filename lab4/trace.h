@@ -1,7 +1,7 @@
 
 /*
  * 
- * Call Blocking in Circuit Switched Networks
+ * Simlib Simulation Library
  * 
  * Copyright (C) 2014 Terence D. Todd
  * Hamilton, Ontario, CANADA
@@ -23,29 +23,31 @@
  * 
  */
 
-/*******************************************************************************/
+/**********************************************************************/
 
-#ifndef _Call_DURATION_
-#define _Call_DURATION_
+#ifndef _TRACE_H_
+#define _TRACE_H_
 
-/*******************************************************************************/
+/**********************************************************************/
 
-#include "trace.h"
-#include "main.h"
+#define DO(x) x
+#define IGNORE(x)
 
-/*******************************************************************************/
+/* Uncomment the next statement to activate trace. */
+/* #define TRACE_ON */
 
-/*
- *
- * Function prototypes
- *
- */
+#ifdef TRACE_ON
+#define TRACE DO
+#else
+#define TRACE IGNORE
+#endif
 
-double get_call_duration(void);
-double get_call_hold_duration(void);
-/*******************************************************************************/
+#define TRACEF(a) { printf("%s @ line %u\n", __FILE__, __LINE__); \
+    a;								  \
+    fflush(stdout); }
 
-#endif /* packetduration.h */
+/**********************************************************************/
 
+#endif /* trace.h */
 
 
