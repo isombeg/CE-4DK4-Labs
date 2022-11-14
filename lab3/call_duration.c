@@ -35,5 +35,12 @@ double get_call_duration(void)
   return exponential_generator((double) MEAN_CALL_DURATION);
 }
 
+double get_call_hold_duration(void)
+{
+    return exponential_generator((double) W);
+}
+
+
+
 
 

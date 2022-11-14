@@ -49,6 +49,11 @@ typedef struct _call_
 typedef struct _simulation_run_data_
 {
   Channel_Ptr * channels;
+  Fifoqueue_Ptr buffer; //step 4
+  int hang_up; //step 4
+  int mean_time; // step 4
+  int in_queue; //step 4
+  int amt_wait_t_sec; //step 5
   long int blip_counter;
   long int call_arrival_count;
   long int calls_processed;

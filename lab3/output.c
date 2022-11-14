@@ -63,6 +63,7 @@ void output_progress_msg_to_screen(Simulation_Run_Ptr this_simulation_run)
 void output_results(Simulation_Run_Ptr this_simulation_run)
 {
   double xmtted_fraction;
+  double prob_of_hang_up;
   Simulation_Run_Data_Ptr sim_data;
 
   sim_data = (Simulation_Run_Data_Ptr) simulation_run_data(this_simulation_run);
@@ -71,13 +72,27 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
   printf("random seed = %d \n", sim_data->random_seed);
   printf("call arrival count = %ld \n", sim_data->call_arrival_count);
-  printf("blocked call count = %ld \n", sim_data->blocked_call_count);
+  //printf("blocked call count = %ld \n", sim_data->blocked_call_count);
+  printf("Hang Up Count = %d \n", sim_data->hang_up); //step 4
 
-  xmtted_fraction = (double) (sim_data->call_arrival_count -
-      sim_data->blocked_call_count)/sim_data->call_arrival_count;
+  prob_of_hang_up = (double)sim_data->hang_up/sim_data->call_arrival_count;
 
-  printf("Blocking probability = %.5f (Service fraction = %.5f)\n",
-	 1-xmtted_fraction, xmtted_fraction);
+  printf("Probability = %.5f \n", prob_of_hang_up);
+
+  printf("Amount in Queue = %d \n", sim_data->in_queue); 
+  printf("Mean Queue Wait Times = %.5f \n", sim_data->mean_time/(double)sim_data->in_queue);
+  printf("Amt of Customers to for t < T_SEC = %d \n", sim_data->amt_wait_t_sec);
+  printf("Average Caller Waiting Time = %.20f \n", sim_data->mean_time/(double)sim_data->call_arrival_count);
+  printf("Probability to Wait Less than T sec = %.5f \n", sim_data->amt_wait_t_sec/(double)sim_data->in_queue);
+
+
+  // xmtted_fraction = (double) (sim_data->call_arrival_count -
+  //     sim_data->blocked_call_count)/sim_data->call_arrival_count;
+
+  // printf("Blocking probability = %.5f (Service fraction = %.5f)\n",
+	// 1-xmtted_fraction, xmtted_fraction);
+ 
+  
 
   printf("\n");
 }

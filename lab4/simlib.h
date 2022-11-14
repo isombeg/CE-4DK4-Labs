@@ -54,7 +54,6 @@ typedef struct _simulation_run_
   struct _eventlist_ * eventlist;
   struct _clock_ * clock;
   void * data;
-  
 } Simulation_Run, * Simulation_Run_Ptr;
 
 typedef struct _clock_
