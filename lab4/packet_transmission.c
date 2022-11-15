@@ -103,6 +103,7 @@ transmission_end_event(Simulation_Run_Ptr simulation_run, void * packet)
   Time backoff_duration, now;
   Simulation_Run_Data_Ptr data;
   Channel_Ptr channel;
+  Station_Ptr station;
 
   data = (Simulation_Run_Data_Ptr) simulation_run_data(simulation_run);
   channel = data->channel;
@@ -111,6 +112,9 @@ transmission_end_event(Simulation_Run_Ptr simulation_run, void * packet)
 
   this_packet = (Packet_Ptr) packet;
   buffer = (data->stations+this_packet->station_id)->buffer;
+
+  //Station will re-transmit unsuccessful packets in the next slot
+  station = data->stations + this_packet->station_id;
 
   /* This station has stopped transmitting. */
   decrement_transmitting_stn_count(channel);
@@ -168,9 +172,18 @@ transmission_end_event(Simulation_Run_Ptr simulation_run, void * packet)
     //backoff_duration = 2.0*uniform_generator() * MEAN_BACKOFF_DURATION;
     backoff_duration = pow(2.0, this_packet->collision_count)*uniform_generator()* MEAN_BACKOFF_DURATION;
 
+
+    //step 4 - station 0 will re-transmit 
+    if (station == data->stations) {
+    schedule_transmission_start_event(simulation_run,
+				      now,
+				      (void *) this_packet);   
+    } else{
     schedule_transmission_start_event(simulation_run,
 				      now + backoff_duration,
-				      (void *) this_packet);
+				      (void *) this_packet);      
+    }
+
   }
 
 }

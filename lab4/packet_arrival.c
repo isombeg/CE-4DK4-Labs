@@ -66,6 +66,8 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* dummy_ptr)
   random_station_id = (int) floor(uniform_generator()*NUMBER_OF_STATIONS);
   station = data->stations + random_station_id;
 
+  // printf("station = %d \n", random_station_id);
+
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));
   new_packet->arrive_time = now;
   new_packet->service_time = get_packet_duration();
