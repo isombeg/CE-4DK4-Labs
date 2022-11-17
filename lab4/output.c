@@ -82,6 +82,9 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   printf("Xmtted Pkts  = %ld (Service Fraction = %.5f)\n",
 	 sim_data->number_of_packets_processed, xmtted_fraction);
 
+  printf("Throughput  = %.5f\n",
+    (double) sim_data->number_of_packets_processed/simulation_run_get_time(this_simulation_run));
+
   printf("Mean Delay   = %.1f \n",
 	 sim_data->accumulated_delay/sim_data->number_of_packets_processed);
 
@@ -111,16 +114,18 @@ void write_step5(
   double acc_service_fraction,
   double acc_mean_delay,
   double acc_mean_collisions_per_packet,
+  double acc_throughput,
   int number_of_sims
 ){
   fprintf(
     fpt,
-    "%d, %d, %f, %f, %f\n",
+    "%d, %d, %f, %f, %f %f\n",
     number_of_stations,
     mean_backoff_duration,
     acc_service_fraction/number_of_sims,
     acc_mean_delay/number_of_sims,
-    acc_mean_collisions_per_packet/number_of_sims
+    acc_mean_collisions_per_packet/number_of_sims,
+    acc_throughput/number_of_sims
   );
 }
 

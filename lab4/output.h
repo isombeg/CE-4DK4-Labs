@@ -44,7 +44,7 @@ output_results(Simulation_Run_Ptr);
 
 FILE* create_step5_csv();
 
-void write_step5(FILE*, int, int, double, double, double, int);
+void write_step5(FILE*, int, int, double, double, double, double, int);
 
 /*******************************************************************************/
 

@@ -48,7 +48,7 @@ main(void)
   int mean_backoff_duration;
   int MEAN_BACKOFF_DURATIONS[] = {MEAN_BACKOFF_DURATION_LIST, 0};
 
-  double acc_service_fraction, acc_mean_delay, acc_mean_collisions_per_packet;
+  double acc_service_fraction, acc_mean_delay, acc_mean_collisions_per_packet, acc_throughput;
 
   int k=0, l;
 
@@ -65,6 +65,7 @@ main(void)
       acc_service_fraction = 0;
       acc_mean_delay = 0;
       acc_mean_collisions_per_packet = 0;
+      acc_throughput = 0;
 
       /* Do a new simulation_run for each random number generator seed. */
       while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
@@ -123,6 +124,7 @@ main(void)
         acc_mean_delay += data.accumulated_delay/data.number_of_packets_processed;
         acc_mean_collisions_per_packet += (double) data.number_of_collisions / 
 	        data.number_of_packets_processed;
+        acc_throughput += (double) data.number_of_packets_processed/simulation_run_get_time(simulation_run);
 
         /* Clean up memory. */
         cleanup(simulation_run);
@@ -135,6 +137,7 @@ main(void)
         acc_service_fraction,
         acc_mean_delay,
         acc_mean_collisions_per_packet,
+        acc_throughput,
         j
       );
     }

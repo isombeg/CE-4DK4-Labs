@@ -31,6 +31,10 @@
 
 /*******************************************************************************/
 
+Time next_slot_time(Time current_time){
+  return SLOT_LENGTH * (floor(current_time / SLOT_LENGTH) + 1); 
+}
+
 long int
 schedule_transmission_start_event(Simulation_Run_Ptr simulation_run,
 				  Time event_time,
@@ -42,7 +46,9 @@ schedule_transmission_start_event(Simulation_Run_Ptr simulation_run,
   event.function = transmission_start_event;
   event.attachment = packet;
 
-  return simulation_run_schedule_event(simulation_run, event, event_time);
+  double guard_time = (SLOT_LENGTH - MEAN_PACKET_DURATION)/2;
+
+  return simulation_run_schedule_event(simulation_run, event, next_slot_time(event_time) + guard_time);
 }
 
 /*******************************************************************************/
