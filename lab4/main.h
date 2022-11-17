@@ -74,6 +74,8 @@ typedef struct _simulation_run_data_
   long int number_of_collisions;
   double accumulated_delay;
   unsigned random_seed;
+  int number_of_stations;
+  int mean_backoff_duration;
 } Simulation_Run_Data, * Simulation_Run_Data_Ptr;
 
 /**********************************************************************/

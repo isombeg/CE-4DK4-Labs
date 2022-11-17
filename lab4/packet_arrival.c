@@ -24,11 +24,17 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <math.h>
 #include "packet_duration.h"
 #include "packet_transmission.h"
 #include "packet_arrival.h"
 
 /*******************************************************************************/
+
+
+Time next_slot_time(Time current_time){
+  return SLOT_LENGTH * (floor(current_time / SLOT_LENGTH) + 1); 
+}
 
 long int
 schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
@@ -40,7 +46,9 @@ schedule_packet_arrival_event(Simulation_Run_Ptr simulation_run,
   event.function = packet_arrival_event;
   event.attachment = NULL;
 
-  return simulation_run_schedule_event(simulation_run, event, event_time);
+  double guard_time = (SLOT_LENGTH - MEAN_PACKET_DURATION)/2;
+
+  return simulation_run_schedule_event(simulation_run, event, next_slot_time(event_time) + guard_time);
 }
 
 /*******************************************************************************/
@@ -63,7 +71,7 @@ packet_arrival_event(Simulation_Run_Ptr simulation_run, void* dummy_ptr)
   /* Randomly pick the station that this packet is arriving to. Note
      that randomly splitting a Poisson process creates multiple
      independent Poisson processes.*/
-  random_station_id = (int) floor(uniform_generator()*NUMBER_OF_STATIONS);
+  random_station_id = (int) floor(uniform_generator()*data->number_of_stations);
   station = data->stations + random_station_id;
 
   new_packet = (Packet_Ptr) xmalloc(sizeof(Packet));

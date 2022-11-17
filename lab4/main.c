@@ -42,63 +42,105 @@ main(void)
   unsigned random_seed;
   unsigned RANDOM_SEEDS[] = {RANDOM_SEED_LIST, 0};
 
-  Simulation_Run_Ptr simulation_run;
-  Simulation_Run_Data data;
-  int i, j=0;
+  int number_of_stations;
+  int NUMBER_OF_STATIONSS[] = {NUMBER_OF_STATIONS_LIST, 0};
 
-  /* Do a new simulation_run for each random number generator seed. */
-  while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
+  int mean_backoff_duration;
+  int MEAN_BACKOFF_DURATIONS[] = {MEAN_BACKOFF_DURATION_LIST, 0};
 
-    /* Set the random generator seed. */
-    random_generator_initialize(random_seed);
+  double acc_service_fraction, acc_mean_delay, acc_mean_collisions_per_packet;
 
-    /* Create a new simulation_run. This gives a clock and
-       eventlist. Clock time is set to zero. */
-    simulation_run = (Simulation_Run_Ptr) simulation_run_new();
+  int k=0, l;
 
-    /* Add our data definitions to the simulation_run. */
-    simulation_run_set_data(simulation_run, (void *) & data);
+  FILE* fpt = create_step5_csv();
 
-    /* Create and initalize the stations. */
-    data.stations = (Station_Ptr) xcalloc((unsigned int) NUMBER_OF_STATIONS,
-					  sizeof(Station));
+  while((number_of_stations = NUMBER_OF_STATIONSS[k++]) != 0){
+    l = 0;
+    while(l < 3){
+      mean_backoff_duration = MEAN_BACKOFF_DURATIONS[(k-1)*3 + l++];
+      Simulation_Run_Ptr simulation_run;
+      Simulation_Run_Data data;
+      int i, j=0;
 
-    /* Initialize various simulation_run variables. */
-    data.blip_counter = 0;
-    data.arrival_count = 0;
-    data.number_of_packets_processed = 0;
-    data.number_of_collisions = 0;
-    data.accumulated_delay = 0.0;
-    data.random_seed = random_seed;
-    
-    /* Initialize the stations. */
-    for(i=0; i<NUMBER_OF_STATIONS; i++) {
-      (data.stations+i)->id = i;
-      (data.stations+i)->buffer = fifoqueue_new();
-      (data.stations+i)->packet_count = 0;
-      (data.stations+i)->accumulated_delay = 0.0;
-      (data.stations+i)->mean_delay = 0;
+      acc_service_fraction = 0;
+      acc_mean_delay = 0;
+      acc_mean_collisions_per_packet = 0;
+
+      /* Do a new simulation_run for each random number generator seed. */
+      while ((random_seed = RANDOM_SEEDS[j++]) != 0) {
+
+        /* Set the random generator seed. */
+        random_generator_initialize(random_seed);
+
+        /* Create a new simulation_run. This gives a clock and
+          eventlist. Clock time is set to zero. */
+        simulation_run = (Simulation_Run_Ptr) simulation_run_new();
+
+        /* Add our data definitions to the simulation_run. */
+        simulation_run_set_data(simulation_run, (void *) & data);
+
+        /* Create and initalize the stations. */
+        data.stations = (Station_Ptr) xcalloc((unsigned int) number_of_stations,
+                sizeof(Station));
+
+        /* Initialize various simulation_run variables. */
+        data.blip_counter = 0;
+        data.arrival_count = 0;
+        data.number_of_packets_processed = 0;
+        data.number_of_collisions = 0;
+        data.accumulated_delay = 0.0;
+        data.random_seed = random_seed;
+        data.number_of_stations = number_of_stations;
+        data.mean_backoff_duration = mean_backoff_duration;
+        
+        /* Initialize the stations. */
+        for(i=0; i<number_of_stations; i++) {
+          (data.stations+i)->id = i;
+          (data.stations+i)->buffer = fifoqueue_new();
+          (data.stations+i)->packet_count = 0;
+          (data.stations+i)->accumulated_delay = 0.0;
+          (data.stations+i)->mean_delay = 0;
+        }
+
+        /* Create and initialize the channel. */
+        data.channel = channel_new();
+
+        /* Schedule initial packet arrival. */
+        schedule_packet_arrival_event(simulation_run, 
+            simulation_run_get_time(simulation_run) +
+            exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
+
+        /* Execute events until we are finished. */
+        while(data.number_of_packets_processed < RUNLENGTH) {
+          simulation_run_execute_event(simulation_run);
+        }
+
+        /* Print out some results. */
+        output_results(simulation_run);
+
+        acc_service_fraction += (double) data.number_of_packets_processed /
+          data.arrival_count;
+        acc_mean_delay += data.accumulated_delay/data.number_of_packets_processed;
+        acc_mean_collisions_per_packet += (double) data.number_of_collisions / 
+	        data.number_of_packets_processed;
+
+        /* Clean up memory. */
+        cleanup(simulation_run);
+      }
+
+      write_step5(
+        fpt,
+        number_of_stations,
+        mean_backoff_duration,
+        acc_service_fraction,
+        acc_mean_delay,
+        acc_mean_collisions_per_packet,
+        j
+      );
     }
-
-    /* Create and initialize the channel. */
-    data.channel = channel_new();
-
-    /* Schedule initial packet arrival. */
-    schedule_packet_arrival_event(simulation_run, 
-		    simulation_run_get_time(simulation_run) +
-		    exponential_generator((double) 1/PACKET_ARRIVAL_RATE));
-
-    /* Execute events until we are finished. */
-    while(data.number_of_packets_processed < RUNLENGTH) {
-      simulation_run_execute_event(simulation_run);
-    }
-
-    /* Print out some results. */
-    output_results(simulation_run);
-
-    /* Clean up memory. */
-    cleanup(simulation_run);
   }
+
+  fclose(fpt);
 
   /* Pause before finishing. */
   getchar();
