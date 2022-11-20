@@ -42,6 +42,10 @@ output_blip_to_screen(Simulation_Run_Ptr);
 void
 output_results(Simulation_Run_Ptr);
 
+FILE* create_step5_csv();
+
+void write_step5(FILE*, int, double, int, double, double, double, double, int);
+
 /*******************************************************************************/
 
 #endif /* output.h */
