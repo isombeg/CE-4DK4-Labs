@@ -71,6 +71,7 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
   printf("\n");
   printf("SIMULATION INPUT PARAMS\n");
   printf("Number of stations = %d \n", sim_data->number_of_stations);
+  printf("Packet Arrival Rate = %f\n", sim_data->arrival_rate);
   printf("Mean Backoff Duration = %d \n", sim_data->mean_backoff_duration);
   printf("Random Seed = %d \n", sim_data->random_seed);
   printf("\n");
@@ -103,13 +104,14 @@ void output_results(Simulation_Run_Ptr this_simulation_run)
 
 FILE* create_step5_csv(){
   FILE* fpt = fopen("step6_run_results.csv", "w");
-  fprintf(fpt, "number of stations, mean backoff duration, service fraction, mean delay, mean collisions per packet\n");
+  fprintf(fpt, "number of stations,arrival rate,mean backoff duration,service fraction,mean delay,mean collisions per packet,throughput\n");
   return fpt;
 }
 
 void write_step5(
   FILE* fpt,
-  int number_of_stations, 
+  int number_of_stations,
+  double arrival_rate,
   int mean_backoff_duration,
   double acc_service_fraction,
   double acc_mean_delay,
@@ -119,8 +121,9 @@ void write_step5(
 ){
   fprintf(
     fpt,
-    "%d, %d, %f, %f, %f %f\n",
+    "%d, %f, %d, %f, %f, %f, %f\n",
     number_of_stations,
+    arrival_rate,
     mean_backoff_duration,
     acc_service_fraction/number_of_sims,
     acc_mean_delay/number_of_sims,
